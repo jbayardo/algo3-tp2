@@ -12,7 +12,8 @@ addons:
     - gcc-4.8
     - g++-4.8
     - clang
-
+notifications:
+  email: false
 before_script:
   - mkdir build
   - cd build

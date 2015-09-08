@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 import os
 import re
+import sys
 
 files = map(lambda x: 'tests/'+x, os.listdir('tests'))
 
+status = 0
 for fname in files:
     if fname[-2:] != 'in':
         continue
@@ -36,5 +38,8 @@ for fname in files:
         if line1 != line2:
             fail = 1
             print "Failure at index ", fname, ":", index, ": ", line1, line2
+            status = 1
     if fail == 0:
         print "GOOOOD ", fname
+
+sys.exit(status)

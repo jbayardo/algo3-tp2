@@ -20,4 +20,4 @@ before_script:
 script:
   - make
   - cd ..
-  - test.py build/algo3_tp2
+  - ./test.py build/algo3_tp2

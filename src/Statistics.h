@@ -81,8 +81,8 @@ private:
  **********************************************************************************************************************/
 class Value {
 public:
-    Value(std::string name)
-            : name(name), value(Statistics::getInstance().values[name]) { };
+    Value(std::string iName)
+            : name(iName), value(Statistics::getInstance().values[name]) { };
 
     std::string inline getName() const {
         return this->name;
@@ -135,8 +135,8 @@ private:
  **********************************************************************************************************************/
 class Counter {
 public:
-    Counter(std::string name)
-            : name(name), serie(Statistics::getInstance().series[name]) { };
+    Counter(std::string iName)
+            : name(iName), serie(Statistics::getInstance().series[iName]) { };
 
     std::string inline getName() const {
         return this->name;
@@ -192,8 +192,8 @@ private:
  **********************************************************************************************************************/
 class Timer {
 public:
-    Timer(std::string name)
-            : name(name), timers(Statistics::getInstance().timers[name]),
+    Timer(std::string iName)
+            : name(iName), timers(Statistics::getInstance().timers[name]),
               start(std::chrono::steady_clock::now()), end(std::chrono::steady_clock::now()), stopped(false) { }
 
     std::string inline getName() const {

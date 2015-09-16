@@ -9,7 +9,7 @@
  * ./tp <ejercicio> <entrada> <salida> <corridas>
  */
 int main(int argc, char *argv[]) {
-    if (argc < 5) {
+    if (argc < 4) {
         std::cerr << "Formato de entrada: " << argv[0] << " <ejercicio> <entrada> <salida> <corridas>" << std::endl;
         return 1;
     }
@@ -17,7 +17,13 @@ int main(int argc, char *argv[]) {
     int exercise = std::atoi(argv[1]);
     std::string input = argv[2];
     std::string output = argv[3];
-    int runs = std::atoi(argv[4]);
+    int runs;
+
+    if (argc == 4) {
+        runs = 1;
+    } else {
+        runs = std::atoi(argv[4]);
+    }
 
     if (runs <= 0) {
         std::cerr << "Parametro de corridas inválido, debe ser mayor a 0." << std::endl;
@@ -42,11 +48,7 @@ int main(int argc, char *argv[]) {
     }
 
     instance->read(input);
-
-    for (int i = 0; i < runs; ++i) {
-        instance->solve();
-    }
-
+    instance->solve(runs);
     instance->write(output);
 
     delete instance;

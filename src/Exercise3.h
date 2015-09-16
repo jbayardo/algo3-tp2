@@ -13,7 +13,7 @@ public:
 
     }
 
-    void solve() const {
+    void solve(int runs) const {
 
     }
 

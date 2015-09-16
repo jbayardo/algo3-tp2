@@ -5,23 +5,15 @@
 
 class Exercise1 : public Exercise {
 public:
-    Exercise1() {
-
-    }
-
-    void read(std::string) {
-
-    }
-
-    void solve() const {
-
-    }
-
-    void write(std::string) {
-
-    }
+    Exercise1();
+    void read(std::string input);
+    void solve(int runs) const;
+    void write(std::string output);
 
     ~Exercise1() { }
+private:
+    int floors;
+
 };
 
 

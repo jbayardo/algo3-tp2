@@ -48,8 +48,7 @@ int main(int argc, char *argv[]) {
     }
 
     instance->read(input);
-    instance->solve(runs);
-    instance->write(output);
+    instance->solve(runs, output);
 
     delete instance;
 

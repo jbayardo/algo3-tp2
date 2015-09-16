@@ -2,18 +2,27 @@
 #define ALGO3_TP2_EXERCISE1_H
 
 #include "Exercise.h"
+#include <vector>
+
+class Maximize {
+public:
+    Maximize(int iFloors);
+    int solve();
+    void addPortal(int from, int to);
+    virtual ~Maximize();
+private:
+    int floors;
+    int portals;
+    bool **adjacency;
+};
 
 class Exercise1 : public Exercise {
 public:
-    Exercise1();
     void read(std::string input);
-    void solve(int runs) const;
-    void write(std::string output);
-
-    ~Exercise1() { }
+    void solve(int runs, std::string output);
+    virtual ~Exercise1() { }
 private:
-    int floors;
-
+    std::list<Maximize> instances;
 };
 
 

@@ -3,6 +3,20 @@
 #include <stdexcept>
 #include "Exercise2.h"
 
+/** Entrada y salida
+ */
+std::list<std::string> split(std::string string, char delim) {
+    std::list<std::string> output;
+    std::string current;
+    std::stringstream stream(string);
+
+    while (std::getline(stream, current, delim)) {
+        output.push_back(current);
+    }
+
+    return output;
+}
+
 void Exercise2::read(std::string input) {
     int test = 0;
     std::ifstream handle;
@@ -12,9 +26,13 @@ void Exercise2::read(std::string input) {
         throw std::runtime_error("Fallo al abrir el archivo de tests para el ejercicio 2");
     }
 
+    int floors;
+
     // Mientras que podamos leer un piso
-    while (handle >> this->floors) {
-        handle >> this->portals;
+    while (handle >> floors) {
+        int portals;
+
+        handle >> portals;
 
         std::string line;
 
@@ -46,14 +64,6 @@ void Exercise2::read(std::string input) {
 
 /* Resuelve runs veces por caso de test!
  */
-void Exercise2::solve(int runs) const {
-
-}
-
-void Exercise2::write(std::string output) {
-
-}
-
-Exercise2::Exercise2() {
+void Exercise2::solve(int runs, std::string output) {
 
 }

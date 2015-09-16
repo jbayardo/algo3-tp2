@@ -1,10 +1,70 @@
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include "Statistics.h"
 #include "Exercise1.h"
 
+Maximize::Maximize(int iFloors) : floors(iFloors), portals(0) {
+    adjacency = new bool*[floors];
+
+    for (auto i = 0; i < floors; ++i) {
+        adjacency[floors] = new bool[i + 1];
+    }
+}
+
+int Maximize::solve() {
+    Timer timer("Excercise 1 Timer");
+    std::vector<int> best(floors);
+
+    for (auto floor = 0; floor < floors; ++floor) {
+        for (auto portal = floor + 1; portal < portals; ++portal) {
+            /* Si teniamos forma de conectar el piso floor con el piso portal,
+             * actualizamos el portal con lo que sea maximo.
+             */
+            if (adjacency[floor][portal]) {
+                best[portal] = std::max(best[portal], best[floor] + 1);
+            }
+        }
+    }
+
+    return best[floors - 1];
+}
+
+void Maximize::addPortal(int from, int to) {
+    if (from < 0 || from > floors || to <= from || to > floors) {
+        throw std::out_of_range("Portal coordinates out of range");
+    }
+
+    if (!adjacency[from][to]) {
+        adjacency[from][to] = true;
+        portals++;
+    }
+}
+
+Maximize::~Maximize() {
+    for (auto i = 0; i < floors; ++i) {
+        delete adjacency[i];
+    }
+
+    delete adjacency;
+}
+
+/*
+ * Entrada y salida!
+ */
+std::list<std::string> split(std::string string, char delim) {
+    std::list<std::string> output;
+    std::string current;
+    std::stringstream stream(string);
+
+    while (std::getline(stream, current, delim)) {
+        output.push_back(current);
+    }
+
+    return output;
+}
+
 void Exercise1::read(std::string input) {
-    int test = 0;
     std::ifstream handle;
     handle.open(input, std::ifstream::in);
 
@@ -12,8 +72,12 @@ void Exercise1::read(std::string input) {
         throw std::runtime_error("Fallo al abrir el archivo de tests para el ejercicio 1");
     }
 
+    int floors;
+
     // Mientras que podamos leer un piso
-    while (handle >> this->floors) {
+    while (handle >> floors) {
+        Maximize instance(floors);
+
         std::string line;
 
         // Leemos una linea no vacia
@@ -28,15 +92,16 @@ void Exercise1::read(std::string input) {
                 int from, to;
                 std::stringstream endpoints(portal);
                 endpoints >> from >> to;
-                // TODO: Agregar portal!
+                instance.addPortal(from, to);
             }
+
+            // Agregar instancia
+            instances.push_back(instance);
         } else {
             // Hubo un error, abortar!
             handle.close();
             throw std::runtime_error("Fallo al leer el archivo de tests para el ejercicio 1");
         }
-
-        ++test;
     }
 
     handle.close();
@@ -44,14 +109,16 @@ void Exercise1::read(std::string input) {
 
 /* Resuelve runs veces por caso de test!
  */
-void Exercise1::solve(int runs) const {
+void Exercise1::solve(int runs, std::string output) {
+    std::ofstream handle(output.c_str(), std::ofstream::out | std::ofstream::app);
 
-}
+    for (auto &instance : instances) {
+        for (auto i = 0; i < runs - 1; ++i) {
+            instance.solve();
+        }
 
-void Exercise1::write(std::string output) {
+        handle << instance.solve() << std::endl;
+    }
 
-}
-
-Exercise1::Exercise1() {
-
+    handle.close();
 }

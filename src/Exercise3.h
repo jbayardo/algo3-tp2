@@ -5,23 +5,9 @@
 
 class Exercise3 : public Exercise {
 public:
-    Exercise3() {
-
-    }
-
-    void read(std::string) {
-
-    }
-
-    void solve(int runs) const {
-
-    }
-
-    void write(std::string) {
-
-    }
-
-    ~Exercise3() { }
+    void read(std::string input) { }
+    void solve(int runs, std::string output) { }
+    virtual ~Exercise3() { }
 };
 
 

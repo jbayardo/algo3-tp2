@@ -4,25 +4,26 @@
 #include "Exercise.h"
 #include <vector>
 
-class Maximize {
-public:
-    Maximize(int iFloors);
-    int solve();
-    void addPortal(int from, int to);
-    virtual ~Maximize();
-private:
-    int floors;
-    int portals;
-    bool **adjacency;
+class Maximize
+{
+    public:
+        Maximize(int iFloors);
+        int solve();
+        void addPortal(int from, int to);
+        virtual ~Maximize();
+    private:
+        int floors;
+        std::vector<std::vector<bool>> adjacency;
 };
 
-class Exercise1 : public Exercise {
-public:
-    void read(std::string input);
-    void solve(int runs, std::string output);
-    virtual ~Exercise1() { }
-private:
-    std::list<Maximize> instances;
+class Exercise1 : public Exercise
+{
+    public:
+        void read(std::string input);
+        void solve(int runs, std::string output);
+        virtual ~Exercise1() { }
+    private:
+        std::list<Maximize> instances;
 };
 
 

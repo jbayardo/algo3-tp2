@@ -4,12 +4,12 @@
 #include "Statistics.h"
 #include "Exercise1.h"
 
-Maximize::Maximize(int iFloors) : floors(iFloors), portals(0) {
-    adjacency = new bool*[floors];
+Maximize::Maximize(int iFloors) : floors(iFloors) {
+	adjacency = std::vector<std::vector<bool>>(floors, std::vector<bool>(floors + 1, false));
 
-    for (auto i = 0; i < floors; ++i) {
-        adjacency[floors] = new bool[i + 1];
-    }
+    // for (auto i = 0; i < floors; ++i) {
+    //     adjacency[floors] = new bool[i + 1]; //MAL!
+    // }
 }
 
 int Maximize::solve() {
@@ -17,7 +17,7 @@ int Maximize::solve() {
     std::vector<int> best(floors);
 
     for (auto floor = 0; floor < floors; ++floor) {
-        for (auto portal = floor + 1; portal < portals; ++portal) {
+        for (auto portal = floor + 1; portal < floors+1; ++portal) {
             /* Si teniamos forma de conectar el piso floor con el piso portal,
              * actualizamos el portal con lo que sea maximo.
              */
@@ -34,19 +34,15 @@ void Maximize::addPortal(int from, int to) {
     if (from < 0 || from > floors || to <= from || to > floors) {
         throw std::out_of_range("Portal coordinates out of range");
     }
-
-    if (!adjacency[from][to]) {
-        adjacency[from][to] = true;
-        portals++;
-    }
+    adjacency[from][to] = true;
 }
 
 Maximize::~Maximize() {
-    for (auto i = 0; i < floors; ++i) {
-        delete adjacency[i];
-    }
+    // for (auto i = 0; i < floors; ++i) {
+    //     delete adjacency[i];
+    // }
 
-    delete adjacency;
+    // delete adjacency;
 }
 
 /*

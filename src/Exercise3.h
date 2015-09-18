@@ -4,9 +4,6 @@
 #include "Exercise.h"
 #include <vector>
 #include <list>
-#include <queue>
-#include <limits>
-#include <unordered_map>
 
 struct Edge {
     Edge(int iFrom, int iTo, int iWeight) : from(iFrom), to(iTo), weight(iWeight) { }
@@ -22,18 +19,16 @@ struct Edge {
 
 /*
  * CUIDADO: conectar 2 veces seguidas no anda. Solo se conecta una vez.
- * TODO: ver si esta todo bien con que usemos un hash map, es una paja sino
  */
 class WeightedGraph {
 public:
-    WeightedGraph() : sum(0) { }
+    WeightedGraph(int maximum) : sum(0), vertices(maximum, std::list<Edge>()) { }
     void connect(int from, int to, int weight);
     bool exists(int node) const;
     int getSum() const;
-    std::size_t size() const;
     int prim();
 private:
-    std::unordered_map<int, std::list<Edge>> vertices;
+    std::vector<std::list<Edge>> vertices;
     int sum;
 };
 

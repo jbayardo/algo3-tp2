@@ -1,17 +1,10 @@
 #include <fstream>
 #include <stdexcept>
+#include <queue>
 #include "Statistics.h"
 #include "Exercise3.h"
 
 void WeightedGraph::connect(int from, int to, int weight) {
-    if (vertices.find(from) == vertices.end()) {
-        vertices[from] = std::list<Edge>();
-    }
-
-    if (vertices.find(to) == vertices.end()) {
-        vertices[to] = std::list<Edge>();
-    }
-
     vertices[from].push_back(Edge(from, to, weight));
     vertices[to].push_back(Edge(to, from, weight));
 
@@ -19,16 +12,12 @@ void WeightedGraph::connect(int from, int to, int weight) {
 }
 
 bool WeightedGraph::exists(int node) const {
-    return !(vertices.find(node) == vertices.end());
+    return vertices[node].length() != 0;
 
 }
 
 int WeightedGraph::getSum() const {
     return sum;
-}
-
-std::size_t WeightedGraph::size() const {
-    return this->vertices.size();
 }
 
 int WeightedGraph::prim() {

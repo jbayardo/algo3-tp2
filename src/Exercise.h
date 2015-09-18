@@ -13,4 +13,6 @@ public:
     virtual ~Exercise() { };
 };
 
+extern std::list<std::string> split(std::string string, char delim);
+
 #endif //ALGO3_TP2_EXERCISE_H

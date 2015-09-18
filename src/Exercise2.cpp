@@ -5,18 +5,6 @@
 
 /** Entrada y salida
  */
-std::list<std::string> split(std::string string, char delim) {
-    std::list<std::string> output;
-    std::string current;
-    std::stringstream stream(string);
-
-    while (std::getline(stream, current, delim)) {
-        output.push_back(current);
-    }
-
-    return output;
-}
-
 void Exercise2::read(std::string input) {
     int test = 0;
     std::ifstream handle;

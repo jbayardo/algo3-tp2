@@ -14,14 +14,21 @@ Maximize::Maximize(int iFloors)
 int Maximize::solve() {
     Timer timer("Excercise 1 Timer");
     std::vector<int> best(floors);
+    std::vector<bool> reachable(floors, false);
+    reachable[0] = true;
 
     for (auto floor = 0; floor < floors; ++floor) {
-        for (auto portal = floor + 1; portal < floors; ++portal) {
-            /* Si teniamos forma de conectar el piso floor con el piso portal,
-             * actualizamos el portal con lo que sea maximo.
+        if (!reachable[floor]) {
+            continue;
+        }
+
+        for (auto floor2 = floor + 1; floor2 < floors; ++floor2) {
+            /* Si teniamos forma de conectar el piso floor con el piso floor2,
+             * actualizamos el floor2 con lo que sea maximo.
              */
-            if (adjacency[floor][portal]) {
-                best[portal] = std::max(best[portal], best[floor] + 1);
+            if (adjacency[floor][floor2]) {
+                best[floor2] = std::max(best[floor2], best[floor] + 1);
+                reachable[floor2] = true;
             }
         }
     }

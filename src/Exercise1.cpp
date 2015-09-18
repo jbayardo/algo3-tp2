@@ -4,12 +4,11 @@
 #include "Statistics.h"
 #include "Exercise1.h"
 
-Maximize::Maximize(int iFloors) : floors(iFloors) {
-	adjacency = std::vector<std::vector<bool>>(floors, std::vector<bool>(floors + 1, false));
-
-    // for (auto i = 0; i < floors; ++i) {
-    //     adjacency[floors] = new bool[i + 1]; //MAL!
-    // }
+Maximize::Maximize(int iFloors)
+        : floors(iFloors) {
+    for (auto i = 0; i < floors; ++i) {
+        adjacency.push_back(std::vector<bool>(floors - i, false));
+    }
 }
 
 int Maximize::solve() {
@@ -17,7 +16,7 @@ int Maximize::solve() {
     std::vector<int> best(floors);
 
     for (auto floor = 0; floor < floors; ++floor) {
-        for (auto portal = floor + 1; portal < floors+1; ++portal) {
+        for (auto portal = floor + 1; portal < floors; ++portal) {
             /* Si teniamos forma de conectar el piso floor con el piso portal,
              * actualizamos el portal con lo que sea maximo.
              */
@@ -34,20 +33,14 @@ void Maximize::addPortal(int from, int to) {
     if (from < 0 || from > floors || to <= from || to > floors) {
         throw std::out_of_range("Portal coordinates out of range");
     }
+
     adjacency[from][to] = true;
 }
 
-Maximize::~Maximize() {
-    // for (auto i = 0; i < floors; ++i) {
-    //     delete adjacency[i];
-    // }
+/***********************************************************************************************************************
+ *                                              Entrada y Salida
+ **********************************************************************************************************************/
 
-    // delete adjacency;
-}
-
-/*
- * Entrada y salida!
- */
 void Exercise1::read(std::string input) {
     std::ifstream handle;
     handle.open(input, std::ifstream::in);
@@ -94,7 +87,7 @@ void Exercise1::read(std::string input) {
 /* Resuelve runs veces por caso de test!
  */
 void Exercise1::solve(int runs, std::string output) {
-    std::ofstream handle(output.c_str(), std::ofstream::out | std::ofstream::app);
+    std::ofstream handle(output.c_str(), std::ofstream::out | std::ofstream::trunc);
 
     for (auto &instance : instances) {
         for (auto i = 0; i < runs - 1; ++i) {

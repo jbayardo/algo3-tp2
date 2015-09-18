@@ -10,4 +10,4 @@ std::list<std::string> split(std::string string, char delim) {
     }
 
     return output;
-}:w
+}

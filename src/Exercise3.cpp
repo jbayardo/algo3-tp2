@@ -1,6 +1,71 @@
-#include "Exercise3.h"
 #include <fstream>
 #include <stdexcept>
+#include "Statistics.h"
+#include "Exercise3.h"
+
+void WeightedGraph::connect(int from, int to, int weight) {
+    if (vertices.find(from) == vertices.end()) {
+        vertices[from] = std::list<Edge>();
+    }
+
+    if (vertices.find(to) == vertices.end()) {
+        vertices[to] = std::list<Edge>();
+    }
+
+    vertices[from].push_back(Edge(from, to, weight));
+    vertices[to].push_back(Edge(to, from, weight));
+
+    sum += weight;
+}
+
+bool WeightedGraph::exists(int node) const {
+    return !(vertices.find(node) == vertices.end());
+
+}
+
+int WeightedGraph::getSum() const {
+    return sum;
+}
+
+std::size_t WeightedGraph::size() const {
+    return this->vertices.size();
+}
+
+int WeightedGraph::prim() {
+    Timer timer("Excercise 3 Timer");
+    WeightedGraph output;
+    std::priority_queue<Edge> queue;
+
+    // Pongo todos los vertices que conectan la fuente con otro
+    for (auto &edge : vertices[0]) {
+        queue.push(edge);
+    }
+
+    // Hasta que no nos hallamos quedado sin aristas
+    while (!queue.empty()) {
+        // Tomamos la arista mas chica que conecta a un nodo que ya esta en
+        // el arbol con algun otro nodo
+        Edge current = queue.top();
+        queue.pop();
+
+        // Si el otro nodo no esta en el arbol
+        if (!output.exists(current.to)) {
+            // Lo conectamos!
+            output.connect(current.from, current.to, current.weight);
+
+            // Agregamos los vertices nuevos
+            for (auto &edge : vertices[current.to]) {
+                queue.push(edge);
+            }
+        }
+    }
+
+    return getSum() - output.getSum();
+}
+
+/***********************************************************************************************************************
+ *                                              Entrada y Salida
+ **********************************************************************************************************************/
 
 void Exercise3::read(std::string input) {
     std::ifstream handle;
@@ -31,7 +96,7 @@ void Exercise3::read(std::string input) {
         }
     }
 
-    if (handle.fail()) {
+    if (handle.fail() && !handle.eof()) {
         handle.close();
         throw std::runtime_error("Fallo al leer el archivo de tests para el ejercicio 3");
     }
@@ -40,7 +105,7 @@ void Exercise3::read(std::string input) {
 }
 
 void Exercise3::solve(int runs, std::string output) {
-    std::ofstream handle(output.c_str(), std::ofstream::out | std::ofstream::app);
+    std::ofstream handle(output.c_str(), std::ofstream::out | std::ofstream::trunc);
 
     for (auto &instance : instances) {
         for (auto i = 0; i < runs - 1; ++i) {

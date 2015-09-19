@@ -12,8 +12,7 @@ void WeightedGraph::connect(int from, int to, int weight) {
 }
 
 bool WeightedGraph::exists(int node) const {
-    return vertices[node].length() != 0;
-
+    return vertices[node].size() != 0;
 }
 
 int WeightedGraph::getSum() const {
@@ -22,7 +21,7 @@ int WeightedGraph::getSum() const {
 
 int WeightedGraph::prim() {
     Timer timer("Excercise 3 Timer");
-    WeightedGraph output;
+    WeightedGraph output(this->vertices.size());
     std::priority_queue<Edge> queue;
 
     // Pongo todos los vertices que conectan la fuente con otro
@@ -69,10 +68,14 @@ void Exercise3::read(std::string input) {
     // Mientras que podamos leer un piso
     while (std::getline(handle, line)) {
         if (!line.empty()) {
-            WeightedGraph graph;
+
+			/*TODO: ATENCION CHEQUEAR! Yo hice esto porque no compilaba porque el constructor necesita que le pases un int
+			la cantidad de vertices, se puede calcular de esta manera si es que se puede confiar en el input*/
+			std::list<std::string> parser = split(line, ';');
+			WeightedGraph graph(parser.size());
 
             // Tenemos una linea no vacia. Splitteamos por ; y procesamos individualmente
-            for (auto &portal : split(line, ';')) {
+			for (auto &portal : parser) {
                 int from, to, weight;
                 std::stringstream endpoints(portal);
                 endpoints >> from >> to >> weight;

@@ -4,6 +4,8 @@
 #include <string>
 #include <list>
 #include <sstream>
+#include <algorithm>
+
 
 class Exercise {
 public:

@@ -14,9 +14,9 @@ El edificio se puede ver como una matriz de ixj siendo i pisos y j longuitud de 
 de una posicion a un indice en el vector de adyacencia, para convertir una direccion x,y en una direccion lineal.
 
 Los intermediarios los dejo a lo ultimo de la lista.*/
-ShortestPath::ShortestPath(int floors, int length, int portals) : 
-	floors(floors), 
-	length(length), 
+ShortestPath::ShortestPath(int ifloors, int ilength, int portals) : 
+	floors(ifloors), 
+	length(ilength), 
 	portalIndex(floors * length),
 	goal((floors * length) - 1),
 	adjacency(std::vector<std::set<int>>(floors * length + portals)),
@@ -61,7 +61,7 @@ void ShortestPath::connect(int nodef, int nodet) {
 }
 
 //Mapea la posicion especifica a un vertice del grafo
-int ShortestPath::getNodeIndex(int floor, int pos) {
+inline int ShortestPath::getNodeIndex(int floor, int pos) {
 	return (floor * this->length) + pos;
 }
 

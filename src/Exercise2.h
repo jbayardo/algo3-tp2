@@ -10,7 +10,7 @@ public:
 	ShortestPath(int iFloors, int length, int iPortals);
 	void addPortal(int fromFloor, int fromD, int toFloor, int toD);
 	void connect(int from, int to);
-	int ShortestPath::getNodeIndex(int floor, int pos);
+	inline int getNodeIndex(int floor, int pos);
 	int solve();
 private:
 	int floors;								//Cantidad de pisos

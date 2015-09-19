@@ -28,8 +28,8 @@ public:
     int getSum() const;
     int prim();
 private:
-    std::vector<std::list<Edge>> vertices;
     int sum;
+    std::vector<std::list<Edge>> vertices;
 };
 
 class Exercise3 : public Exercise {

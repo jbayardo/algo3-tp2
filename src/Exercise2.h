@@ -7,7 +7,7 @@
 
 class ShortestPath {
 public:
-	ShortestPath(int iFloors, int length, int iPortals);
+	ShortestPath(int ifloors, int ilength, int portals);
 	void addPortal(int fromFloor, int fromD, int toFloor, int toD);
 	void connect(int from, int to);
 	inline int getNodeIndex(int floor, int pos);

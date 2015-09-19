@@ -14,16 +14,16 @@ El edificio se puede ver como una matriz de ixj siendo i pisos y j longuitud de 
 de una posicion a un indice en el vector de adyacencia, para convertir una direccion x,y en una direccion lineal.
 
 Los intermediarios los dejo a lo ultimo de la lista.*/
-ShortestPath::ShortestPath(int floors, int lenght, int portals) : 
+ShortestPath::ShortestPath(int floors, int length, int portals) : 
 	floors(floors), 
-	lenght(lenght), 
-	portalIndex(floors * lenght),
-	goal((floors * lenght) - 1),
-	adjacency(std::vector<std::set<int>>(floors * lenght + portals)),
-	isPortal(std::vector<bool> (floors * lenght, false)) {
+	length(length), 
+	portalIndex(floors * length),
+	goal((floors * length) - 1),
+	adjacency(std::vector<std::set<int>>(floors * length + portals)),
+	isPortal(std::vector<bool> (floors * length, false)) {
 	//Conecto las posiciones dentro de cada piso
 	for (int floor = 0; floor < floors; ++floor) {
-		for (int pos = 0; pos < lenght - 1; ++pos) {
+		for (int pos = 0; pos < length - 1; ++pos) {
 			connect(getNodeIndex(floor, pos), getNodeIndex(floor, pos + 1));
 		}
 	}
@@ -62,13 +62,13 @@ void ShortestPath::connect(int nodef, int nodet) {
 
 //Mapea la posicion especifica a un vertice del grafo
 int ShortestPath::getNodeIndex(int floor, int pos) {
-	return (floor * this->lenght) + pos;
+	return (floor * this->length) + pos;
 }
 
-void printp(std::vector<int> &p, int floors, int lenght) {
+void printp(std::vector<int> &p, int floors, int length) {
 	for (int x = 0; x < floors; ++x) {
-		for (int y = 0; y < lenght; ++y) {
-			std::cout << p[x*lenght + y] << " ";
+		for (int y = 0; y < length; ++y) {
+			std::cout << p[x*length + y] << " ";
 		}
 		std::cout << std::endl;
 	}
@@ -122,13 +122,13 @@ void Exercise2::read(std::string input) {
 
     // Mientras que podamos leer un piso
     while (handle >> floors) {
-        int lenght;
+        int length;
         
-		handle >> lenght;
+		handle >> length;
         std::string line;
 		//TODO: Preguntar (fijarse caso uno test catedra)
 		floors++; 
-		lenght++;
+		length++;
 
         // Leemos una linea no vacia
         while (line.length() == 0 && !handle.fail()) {
@@ -137,7 +137,7 @@ void Exercise2::read(std::string input) {
 
         // Si no hubo errores, tenemos una linea no vacia
 		std::list<std::string> portals = split(line, ';');
-		ShortestPath instance(floors, lenght, portals.size());
+		ShortestPath instance(floors, length, portals.size());
 
         if (!handle.fail()) {
             // Splitteamos por ; y procesamos individualmente

@@ -66,9 +66,9 @@ inline int ShortestPath::getNodeIndex(int floor, int pos) {
 }
 
 void printp(std::vector<int> &p, int floors, int length) {
-	for (int x = 0; x < floors; ++x) {
+	for (int x = floors - 1; x >= 0; --x) {
 		for (int y = 0; y < length; ++y) {
-			std::cout << p[x*length + y] << " ";
+			printf("%2d ", p[x*length + y]);
 		}
 		std::cout << std::endl;
 	}
@@ -102,6 +102,7 @@ int ShortestPath::solve() {
 		}
 	}
 	//Devuelvo la distancia hasta el objetivo, si es -1 es que no se puede alcanzar desde el vertice inicial
+	//printp(distance, this->floors, this->length);
 	return distance[this->goal];
 }
 

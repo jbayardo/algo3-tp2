@@ -5,7 +5,7 @@
 #include "Exercise1.h"
 
 Maximize::Maximize(int iFloors)
-        : floors(iFloors+1) {
+        : floors(iFloors) {
     for (auto i = 0; i < floors; ++i) {
         adjacency.push_back(std::vector<bool>(floors-i, false));
     }

@@ -5,9 +5,9 @@
 #include "Exercise1.h"
 
 Maximize::Maximize(int iFloors)
-        : floors(iFloors) {
+        : floors(iFloors+1) {
     for (auto i = 0; i < floors; ++i) {
-        adjacency.push_back(std::vector<bool>(floors - i, false));
+        adjacency.push_back(std::vector<bool>(floors-i, false));
     }
 }
 
@@ -26,7 +26,7 @@ int Maximize::solve() {
             /* Si teniamos forma de conectar el piso floor con el piso floor2,
              * actualizamos el floor2 con lo que sea maximo.
              */
-            if (adjacency[floor][floor2]) {
+            if (adjacency[floor][floor2-floor]) {
                 best[floor2] = std::max(best[floor2], best[floor] + 1);
                 reachable[floor2] = true;
             }
@@ -41,7 +41,7 @@ void Maximize::addPortal(int from, int to) {
         throw std::out_of_range("Portal coordinates out of range");
     }
 
-    adjacency[from][to] = true;
+    adjacency[from][to-from] = true;
 }
 
 /***********************************************************************************************************************

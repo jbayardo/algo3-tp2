@@ -87,7 +87,6 @@ int ShortestPath::solve() {
 				distance[neighbor] = distance[now] + 1;
 				parent[neighbor] = now;
 				Q.push(neighbor);
-				if (neighbor == this->goal) break;
 			}
 			if (neighbor == this->goal) {
 				return distance[neighbor];

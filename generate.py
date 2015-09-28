@@ -12,7 +12,7 @@ EX_FILE_TEMPLATE = "test_%d_complejidad_%s.in"
 
 
 def best_case_1(top_floor):
-    return str(top_floor) + "\n" + "0 " + str(top_floor + 1)
+    return str(top_floor) + "\n" + "0 " + str(top_floor)
 
 
 def worst_case_1(top_floor):

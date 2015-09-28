@@ -28,10 +28,8 @@ def worst_case_1(top_floor):
 ####################################
 
 def best_case_2(top):
-    cases = []
-    for l in xrange(2, max(top+1, 3)):
-        cases.append("%d %d\n0 0 %d 0" % (top, l, top))
-    return "\n".join(cases)
+    return "\n".join(["%d %d\n0 0 %d 0" % (top, l, top)
+                      for l in xrange(2, max(top+1, 3))])
 
 
 def worst_case_2(top):
@@ -67,6 +65,7 @@ worst_case = {}
 worst_case[1] = worst_case_1
 worst_case[2] = worst_case_2
 worst_case[3] = worst_case_3
+
 
 def generate_ex(ex, max_cases):
     best_file = EX_DIR + EX_FILE_TEMPLATE % (ex, BEST)

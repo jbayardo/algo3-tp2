@@ -76,19 +76,20 @@ int ShortestPath::solve() {
 	distance[0] = 0;
 	Q.push(0);
 
-	int now;
-
 	while (!Q.empty()) {
 		//Desencolo
-		now = Q.front();
+		auto now = Q.front();
 		Q.pop();
 		//Itero por los vecinos del vertice actual (a lo sumo 3)
-		for (int neighbor : this->adjacency[now]) {
+		for (auto neighbor : this->adjacency[now]) {
 			//Si no lo habia alcanzado hasta ahora, actualizo su distancia y lo introduzco en la cola
 			if (distance[neighbor] == -1) {
 				distance[neighbor] = distance[now] + 1;
 				parent[neighbor] = now;
 				Q.push(neighbor);
+			}
+			if (neighbor == this->goal) {
+				return distance[neighbor];
 			}
 		}
 	}

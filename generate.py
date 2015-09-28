@@ -1,5 +1,6 @@
 import os
 import sys
+from collections import defaultdict
 
 EX_DIR = "experiments/"
 BEST = "best"
@@ -42,11 +43,34 @@ def generate_ex1(max_cases):
 ####################################
 
 def best_case_2(top):
-    pass
-
+    cases = []
+    for l in xrange(2, max(top+1, 3)):
+        cases.append("%d %d\n0 0 %d 0" % (top, l, top))
+    return "\n".join(cases)
 
 def worst_case_2(top):
-    pass
+    cases = defaultdict(list)
+    for l in xrange(2, max(top+1, 3)):
+        for floor in xrange(0, top):
+            portal_x = ((floor+1) % 2) * l
+            cases["%d %d\n" % (top, l)].append("%d %d %d %d" % (floor, portal_x, floor + 1, portal_x))
+    return "\n".join([k + "; ".join(v) for k, v in cases.iteritems()])
+
+
+def generate_ex2(max_cases):
+    best_file = EX_DIR + EX_FILE_TEMPLATE % (2, BEST)
+    worst_file = EX_DIR + EX_FILE_TEMPLATE % (2, WORST)
+
+    best_output = []
+    worst_output = []
+
+    for x in xrange(1, max_cases):
+        best_output.append(best_case_1(x))
+        worst_output.append(worst_case_1(x))
+
+    write_ex_file(best_file, "\n".join(best_output))
+    write_ex_file(worst_file, "\n".join(worst_output))
+
 
 ####################################
 ############# Exercise 3 ###########
@@ -76,3 +100,4 @@ if __name__ == '__main__':
     if not os.path.exists(EX_DIR):
         os.makedirs(EX_DIR)
     generate_ex1(100)
+    generate_ex2(100)

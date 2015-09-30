@@ -29,7 +29,7 @@ int WeightedGraph::prim() {
         queue.push(edge);
     }
 
-    // Hasta que no nos hallamos quedado sin aristas
+    // Hasta que no nos hayamos quedado sin aristas
     while (!queue.empty()) {
         // Tomamos la arista mas chica que conecta a un nodo que ya esta en
         // el arbol con algun otro nodo

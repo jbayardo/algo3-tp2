@@ -18,7 +18,6 @@ private:
 	int portalIndex;						//Indice de portales intermedios (para costo 2 de viaje por portales)
 	int goal;								//La meta (el aula de algo 3)
 	std::vector<std::set<int>> adjacency;	//Lista de adyacencia
-	std::vector<bool> isPortal;				//Guardo si en una posicion de un piso hay un portal (para chequear que el input este bien)
 };
 class Exercise2 : public Exercise {
 public:

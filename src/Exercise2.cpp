@@ -19,8 +19,7 @@ ShortestPath::ShortestPath(int ifloors, int ilength, int portals) :
 	length(ilength), 
 	portalIndex(floors * length),
 	goal((floors * length) - 1),
-	adjacency(std::vector<std::set<int>>(floors * length + portals)),
-	isPortal(std::vector<bool> (floors * length, false)) {
+	adjacency(std::vector<std::set<int>>(floors * length + portals)) {
 	//Conecto las posiciones dentro de cada piso
 	for (int floor = 0; floor < floors; ++floor) {
 		for (int pos = 0; pos < length - 1; ++pos) {
@@ -34,20 +33,12 @@ void ShortestPath::addPortal(int fromFloor, int fromD, int toFloor, int toD) {
 	int from = getNodeIndex(fromFloor, fromD);
 	int to = getNodeIndex(toFloor, toD);
 	//Si esas posiciones no tienen un portal, entonces hago la conexion, sino hay un error con el input
-	if (!isPortal[from] && !isPortal[to]) {
-		//Los conecto a traves de un intermediario, asi cumple los 2 metros de costo para viajes por portales
-		connect(from, portalIndex);
-		connect(portalIndex, to);
+	//Los conecto a traves de un intermediario, asi cumple los 2 metros de costo para viajes por portales
+	connect(from, portalIndex);
+	connect(portalIndex, to);
 
-		//Incremento el indice para apuntar al siguiente vertices intermediario
-		portalIndex++;
-
-		//Marco las posiciones como portales
-		isPortal[to] = true;
-		isPortal[from] = true;
-	} else {
-		std::cout << "Unexpected request: dual portal" << std::endl;
-	}
+	//Incremento el indice para apuntar al siguiente vertices intermediario
+	portalIndex++;
 }
 
 void ShortestPath::connect(int nodef, int nodet) {
@@ -85,19 +76,20 @@ int ShortestPath::solve() {
 	distance[0] = 0;
 	Q.push(0);
 
-	int now;
-
 	while (!Q.empty()) {
 		//Desencolo
-		now = Q.front();
+		auto now = Q.front();
 		Q.pop();
 		//Itero por los vecinos del vertice actual (a lo sumo 3)
-		for (int neighbor : this->adjacency[now]) {
+		for (auto neighbor : this->adjacency[now]) {
 			//Si no lo habia alcanzado hasta ahora, actualizo su distancia y lo introduzco en la cola
 			if (distance[neighbor] == -1) {
 				distance[neighbor] = distance[now] + 1;
 				parent[neighbor] = now;
 				Q.push(neighbor);
+			}
+			if (neighbor == this->goal) {
+				return distance[this->goal];
 			}
 		}
 	}

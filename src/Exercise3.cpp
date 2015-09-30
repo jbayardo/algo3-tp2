@@ -68,13 +68,22 @@ void Exercise3::read(std::string input) {
     // Mientras que podamos leer un piso
     while (std::getline(handle, line)) {
         if (!line.empty()) {
-
-			/*TODO: ATENCION CHEQUEAR! Yo hice esto porque no compilaba porque el constructor necesita que le pases un int
-			la cantidad de vertices, se puede calcular de esta manera si es que se puede confiar en el input*/
 			std::list<std::string> parser = split(line, ';');
-			WeightedGraph graph(parser.size());
+
+            int maxFloor = 0;
 
             // Tenemos una linea no vacia. Splitteamos por ; y procesamos individualmente
+            // Obtenemos la cantidad de pisos
+            for (auto &portal : parser) {
+                int from, to, weight;
+                std::stringstream endpoints(portal);
+                endpoints >> from >> to >> weight;
+                maxFloor = std::max(std::max(maxFloor, from), to);
+            }
+
+			WeightedGraph graph(maxFloor + 1);
+
+            // Armamos las conexiones del grafo
 			for (auto &portal : parser) {
                 int from, to, weight;
                 std::stringstream endpoints(portal);

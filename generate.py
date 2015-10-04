@@ -1,6 +1,8 @@
 import os
 import sys
 from collections import defaultdict
+from random import randint
+from itertools import combinations
 
 EX_DIR = "experiments/"
 BEST = "best"
@@ -50,8 +52,14 @@ def best_case_3(top):
     pass
 
 
-def worst_case_3(top):
-    pass
+def worst_case_3(top, max_weight=100):
+    cases = []
+    for n in xrange(3, top+1):
+        edges = ";".join(map(lambda (x, y): "%d %d %d" % (x, y, randint(1, max_weight)),
+                         list(combinations(xrange(n+1), 2))))
+        cases.append(edges)
+    return "\n".join(cases)
+
 
 ####################################
 ############# General ##############

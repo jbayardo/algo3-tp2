@@ -49,11 +49,12 @@ def worst_case_2(top):
 
 
 def best_case_3(top):
-    pass
+    return ""
 
 
 def worst_case_3(top, max_weight=100):
     cases = []
+    top = max(4, top+1)
     for n in xrange(3, top+1):
         edges = ";".join(map(lambda (x, y): "%d %d %d" % (x, y, randint(1, max_weight)),
                          list(combinations(xrange(n+1), 2))))
@@ -102,3 +103,4 @@ if __name__ == '__main__':
         os.makedirs(EX_DIR)
     generate_ex(1, 100)
     generate_ex(2, 100)
+    generate_ex(3, 100)

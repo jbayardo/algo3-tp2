@@ -79,6 +79,7 @@ int ShortestPath::solve() {
 				parent[neighbor] = now;
 				Q.push(neighbor);
 			}
+
 			if (neighbor == this->goal) {
 				return distance[this->goal];
 			}
@@ -110,7 +111,6 @@ void Exercise2::read(std::string input) {
         
 		handle >> length;
         std::string line;
-		//TODO: Preguntar (fijarse caso uno test catedra)
 		floors++; 
 		length++;
 

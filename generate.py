@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 import sys
 from collections import defaultdict
@@ -30,7 +31,7 @@ def worst_case_1(top_floor):
 ####################################
 
 def best_case_2(top):
-    return "\n".join(["%d %d\n0 0 %d 0" % (top, l, top)
+    return "\n".join(["%d %d\n0 0 %d %d" % (top, l, top, l)
                       for l in xrange(2, max(top + 1, 3))])
 
 
@@ -107,6 +108,6 @@ if __name__ == '__main__':
     #     print "Numero Problema a generar"
     if not os.path.exists(EX_DIR):
         os.makedirs(EX_DIR)
-    generate_ex(1, 10000)
-    generate_ex(2, 10000)
-    generate_ex(3, 10000)
+    #generate_ex(1, 100)
+    generate_ex(2, 100)
+    #generate_ex(3, 100)

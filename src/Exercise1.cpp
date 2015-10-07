@@ -17,7 +17,7 @@ int Maximize::solve() {
     std::vector<bool> reachable(floors, false);
     reachable[0] = true;
 
-    for (auto floor = 0; floor < floors; ++floor) {
+    for (auto floor = 0; floor < floors - 1; ++floor) {
         if (!reachable[floor]) {
             continue;
         }

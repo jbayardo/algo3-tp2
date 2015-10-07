@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include "Exercise2.h"
 #include <queue>
-#include <limits>
+#include "Statistics.h"
 
 /*Básicamente sé que de una tengo un vértice por posición posible en el edificio de N pisos, L posiciones por piso = N*L vertices.
 Luego, como la consigna pide que un viaje por portal tenga un costo de 2 segundos, lo que hacemos es, en vez de conectar las
@@ -20,6 +20,8 @@ ShortestPath::ShortestPath(int ifloors, int ilength, int portals) :
 	portalIndex(floors * length),
 	goal((floors * length) - 1),
 	adjacency(std::vector<std::set<int>>(floors * length + portals)) {
+	Timer timer("Excercise 2 Generate Graph Timer");
+
 	//Conecto las posiciones dentro de cada piso
 	for (int floor = 0; floor < floors; ++floor) {
 		for (int pos = 0; pos < length - 1; ++pos) {
@@ -42,13 +44,9 @@ void ShortestPath::addPortal(int fromFloor, int fromD, int toFloor, int toD) {
 }
 
 void ShortestPath::connect(int nodef, int nodet) {
-	//Si no estan conectados, los conecto, sino aviso que el pedido es inesperado 
-	if (adjacency[nodef].find(nodet) == adjacency[nodef].end()) {
-		adjacency[nodef].insert(nodet);
-		adjacency[nodet].insert(nodef);
-	} else {
-		std::cout << "Unexpected request: Already connected" << std::endl;
-	}
+	//Si no estan conectados, los conecto, sino aviso que el pedido es inesperado
+	adjacency[nodef].insert(nodet);
+	adjacency[nodet].insert(nodef);
 }
 
 //Mapea la posicion especifica a un vertice del grafo

@@ -1,6 +1,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <queue>
+#include <iostream>
 #include "Statistics.h"
 #include "Exercise3.h"
 
@@ -98,9 +99,11 @@ void Exercise3::read(std::string input) {
 
 void Exercise3::solve(int runs, std::string output) {
     std::ofstream handle(output.c_str(), std::ofstream::out | std::ofstream::trunc);
+	auto j = 0;
 
     for (auto &instance : instances) {
         for (auto i = 0; i < runs - 1; ++i) {
+			std::cout << "Now running: " << j << " / " << i << "\r";
             instance.kruskal();
         }
 
@@ -114,6 +117,7 @@ void Exercise3::solve(int runs, std::string output) {
         int outSum = -instance.kruskal().getEdgeSum();
 
         handle << inSum - outSum << std::endl;
+		++j;
     }
 
     handle.close();

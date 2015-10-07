@@ -5,50 +5,39 @@
 #include "Exercise3.h"
 
 void WeightedGraph::connect(int from, int to, int weight) {
-    vertices[from].push_back(Edge(from, to, weight));
-    vertices[to].push_back(Edge(to, from, weight));
-
+    adjacency.push_back(Edge(from, to, weight));
     sum += weight;
+    ++edges;
 }
 
-bool WeightedGraph::exists(int node) const {
-    return vertices[node].size() != 0;
+std::size_t inline WeightedGraph::getEdgeSize() const {
+    return edges;
 }
 
-int WeightedGraph::getSum() const {
+int inline WeightedGraph::getEdgeSum() const {
     return sum;
 }
 
-int WeightedGraph::prim() {
+WeightedGraph WeightedGraph::kruskal() {
     Timer timer("Excercise 3 Timer");
-    WeightedGraph output(this->vertices.size());
-    std::priority_queue<Edge> queue;
+    WeightedGraph output(vertices);
+    DisjointSet set(vertices);
+    std::priority_queue<Edge, std::vector<Edge>, std::greater<Edge>> edgeQ(adjacency.begin(), adjacency.end());
 
-    // Pongo todos los vertices que conectan la fuente con otro
-    for (auto &edge : vertices[0]) {
-        queue.push(edge);
-    }
+    while (output.getEdgeSize() < vertices - 1) {
+        Edge current = edgeQ.top();
+        edgeQ.pop();
 
-    // Hasta que no nos hayamos quedado sin aristas
-    while (!queue.empty()) {
-        // Tomamos la arista mas chica que conecta a un nodo que ya esta en
-        // el arbol con algun otro nodo
-        Edge current = queue.top();
-        queue.pop();
+        int setFrom = set.find(current.from);
+        int setTo = set.find(current.to);
 
-        // Si el otro nodo no esta en el arbol
-        if (!output.exists(current.to)) {
-            // Lo conectamos!
+        if (setFrom != setTo) {
+            set.merge(setFrom, setTo);
             output.connect(current.from, current.to, current.weight);
-
-            // Agregamos los vertices nuevos
-            for (auto &edge : vertices[current.to]) {
-                queue.push(edge);
-            }
         }
     }
 
-    return getSum() - output.getSum();
+    return output;
 }
 
 /***********************************************************************************************************************
@@ -89,7 +78,9 @@ void Exercise3::read(std::string input) {
                 std::stringstream endpoints(portal);
                 endpoints >> from >> to >> weight;
 
-                graph.connect(from, to, weight);
+                // Agregamos los pesos del grafo, pero negados, este truco nos va a permitir hacer que Kruskal nos de
+                // el árbol generador máximo
+                graph.connect(from, to, -weight);
             }
 
             // Agregar instancia
@@ -110,10 +101,19 @@ void Exercise3::solve(int runs, std::string output) {
 
     for (auto &instance : instances) {
         for (auto i = 0; i < runs - 1; ++i) {
-            instance.prim();
+            instance.kruskal();
         }
 
-        handle << instance.prim() << std::endl;
+        // Como insertamos los pesos negados, tenemos que negar la suma para poder tener el verdadero valor
+        int inSum = -instance.getEdgeSum();
+
+        // Por otro lado, al calcular Kruskal con los pesos negados, invertimos el orden efectivo de la toma de
+        // vertices, es decir, insertamos primero los vertices más negativos (que serían los más grandes en el grafo
+        // negado). Por lo tanto, simplemente tenemos que tomar el inverso aditivo de la suma para tener la suma del
+        // árbol generador máximo. Negar los pesos del mismo nos daría el verdadero árbol.
+        int outSum = -instance.kruskal().getEdgeSum();
+
+        handle << inSum - outSum << std::endl;
     }
 
     handle.close();

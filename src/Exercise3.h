@@ -5,11 +5,55 @@
 #include <vector>
 #include <list>
 
+class DisjointSet {
+public:
+    DisjointSet(std::size_t size)
+            : rank(size, 1), parent(size, 0) {
+        for (std::size_t i = 0; i < size; ++i) {
+            parent[i] = i;
+        }
+    }
+
+    void merge(int a, int b) {
+        // ASSERT: a != b
+        int setA = find(a);
+        int setB = find(b);
+
+        if (rank[a] < rank[b]) {
+            parent[a] = setB;
+        } else if (rank[a] > rank[b]) {
+            parent[b] = setA;
+        } else {
+            parent[a] = setB;
+            rank[b] += 1;
+        }
+    }
+
+    int find(int element) {
+        int current = element;
+
+        while (parent[current] != current) {
+            current = parent[current];
+        }
+
+        while (parent[element] != current) {
+            int next = parent[element];
+            parent[element] = current;
+            element = next;
+        }
+
+        return current;
+    }
+private:
+    std::vector<int> rank;
+    std::vector<int> parent;
+};
+
 struct Edge {
     Edge(int iFrom, int iTo, int iWeight) : from(iFrom), to(iTo), weight(iWeight) { }
 
-    bool operator<(const Edge &other) const {
-        return weight < other.weight;
+    bool operator>(const Edge &other) const {
+        return weight > other.weight;
     }
 
     int from;
@@ -22,14 +66,16 @@ struct Edge {
  */
 class WeightedGraph {
 public:
-    WeightedGraph(int maximum) : sum(0), vertices(maximum, std::list<Edge>()) { }
+    WeightedGraph(std::size_t iVertices) : sum(0), edges(0), vertices(iVertices) { }
     void connect(int from, int to, int weight);
-    bool exists(int node) const;
-    int getSum() const;
-    int prim();
+    int inline getEdgeSum() const;
+    std::size_t inline getEdgeSize() const;
+    WeightedGraph kruskal();
 private:
     int sum;
-    std::vector<std::list<Edge>> vertices;
+    std::size_t edges;
+    std::size_t vertices;
+    std::list<Edge> adjacency;
 };
 
 class Exercise3 : public Exercise {

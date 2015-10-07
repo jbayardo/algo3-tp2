@@ -5,15 +5,15 @@
 #include <queue>
 #include <limits>
 
-/*Basicamente se que de una tengo un vertice por posicion posible en el edificio N pisos, L posiciones por piso = N*L vertices.
-Luego, como la consigna pide que un viaje por portal tenga un costo de 2 metros, lo que hacemos es, en ves de conectar las
-posiciones que conecta ese portal directamente, lo hacemos a travez de un intermediario:
+/*Básicamente sé que de una tengo un vértice por posición posible en el edificio de N pisos, L posiciones por piso = N*L vertices.
+Luego, como la consigna pide que un viaje por portal tenga un costo de 2 segundos, lo que hacemos es, en vez de conectar las
+posiciones que conecta ese portal directamente, lo hacemos a través de un intermediario:
 (fromFloor, fromD) -> intermediario -> (toFloor, toD)
 
-El edificio se puede ver como una matriz de ixj siendo i pisos y j longuitud de los pasillos. De ahi viene la transformacion
-de una posicion a un indice en el vector de adyacencia, para convertir una direccion x,y en una direccion lineal.
+El edificio se puede ver como una matriz de ixj siendo i pisos y j longuitud de los pasillos. De ahí viene la transformación
+de una posición a un índice en el vector de adyacencia, para convertir una dirección x,y en una dirección lineal.
 
-Los intermediarios los dejo a lo ultimo de la lista.*/
+Los intermediarios los dejo a lo último de la lista.*/
 ShortestPath::ShortestPath(int ifloors, int ilength, int portals) : 
 	floors(ifloors), 
 	length(ilength), 

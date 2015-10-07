@@ -31,15 +31,16 @@ def worst_case_1(top_floor):
 
 def best_case_2(top):
     return "\n".join(["%d %d\n0 0 %d 0" % (top, l, top)
-                      for l in xrange(2, max(top+1, 3))])
+                      for l in xrange(2, max(top + 1, 3))])
 
 
 def worst_case_2(top):
     cases = defaultdict(list)
-    for l in xrange(2, max(top+1, 3)):
+    for l in xrange(2, max(top + 1, 3)):
         for floor in xrange(0, top):
-            portal_x = ((floor+1) % 2) * l
-            cases["%d %d\n" % (top, l)].append("%d %d %d %d" % (floor, portal_x, floor + 1, portal_x))
+            portal_x = ((floor + 1) % 2) * l
+            edge = "%d %d %d %d" % (floor, portal_x, floor + 1, portal_x)
+            cases["%d %d\n" % (top, l)].append(edge)
     return "\n".join([k + "; ".join(v) for k, v in cases.iteritems()])
 
 
@@ -49,15 +50,20 @@ def worst_case_2(top):
 
 
 def best_case_3(top):
-    return ""
+    cases = []
+    for n in xrange(2, max(3, top + 1)):
+        edges = "; ".join(["%d %d %d" % (i, i + 1, randint(1, 100))
+                          for i in xrange(n + 1)])
+        cases.append(edges)
+    return "\n".join(cases)
 
 
 def worst_case_3(top, max_weight=100):
     cases = []
-    top = max(4, top+1)
-    for n in xrange(3, top+1):
-        edges = ";".join(map(lambda (x, y): "%d %d %d" % (x, y, randint(1, max_weight)),
-                         list(combinations(xrange(n+1), 2))))
+    top = max(4, top + 1)
+    for n in xrange(3, top + 1):
+        edges = "; ".join(map(lambda (x, y): "%d %d %d" % (x, y, randint(1, max_weight)),
+                          list(combinations(xrange(n + 1), 2))))
         cases.append(edges)
     return "\n".join(cases)
 

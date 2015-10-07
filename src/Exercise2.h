@@ -3,7 +3,7 @@
 
 #include "Exercise.h"
 #include <vector>
-#include <set>
+#include <list>
 
 class ShortestPath {
 public:
@@ -17,7 +17,7 @@ private:
 	int length;								//Longitud de pasillos
 	int portalIndex;						//Indice de portales intermedios (para costo 2 de viaje por portales)
 	int goal;								//La meta (el aula de algo 3)
-	std::vector<std::set<int>> adjacency;	//Lista de adyacencia
+	std::vector<std::list<int>> adjacency;	//Lista de adyacencia
 };
 class Exercise2 : public Exercise {
 public:

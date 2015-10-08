@@ -1,5 +1,4 @@
 import os
-import sys
 from collections import defaultdict
 from random import randint
 from itertools import combinations
@@ -37,10 +36,12 @@ def best_case_2(top):
 def worst_case_2(top):
     cases = defaultdict(list)
     for l in xrange(2, max(top + 1, 3)):
-        for floor in xrange(0, top):
-            portal_x = ((floor + 1) % 2) * l
-            edge = "%d %d %d %d" % (floor, portal_x, floor + 1, portal_x)
-            cases["%d %d\n" % (top, l)].append(edge)
+        for floor in xrange(l):
+            for here in xrange(l):
+                for there in xrange(l - 1 * (l == (floor + 1))):
+                    edge = "%d %d %d %d" % (floor, here, floor + 1, there)
+                    cases["%d %d\n" % (top, l)].append(edge)
+
     return "\n".join([k + "; ".join(v) for k, v in cases.iteritems()])
 
 

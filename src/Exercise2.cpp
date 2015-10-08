@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include "Exercise2.h"
 #include <queue>
-#include <limits>
+#include "Statistics.h"
 
 /*Básicamente sé que de una tengo un vértice por posición posible en el edificio de N pisos, L posiciones por piso = N*L vertices.
 Luego, como la consigna pide que un viaje por portal tenga un costo de 2 segundos, lo que hacemos es, en vez de conectar las
@@ -19,8 +19,11 @@ ShortestPath::ShortestPath(int ifloors, int ilength, int portals) :
 	length(ilength), 
 	portalIndex(floors * length),
 	goal((floors * length) - 1),
-	adjacency(std::vector<std::set<int>>(floors * length + portals)) {
-	//Conecto las posiciones dentro de cada piso
+	adjacency(std::vector<std::list<int>>(floors * length + portals)) {
+
+	Timer timer("Excercise 2 Generate Graph Timer");
+
+	// Conecto las posiciones dentro de cada piso
 	for (int floor = 0; floor < floors; ++floor) {
 		for (int pos = 0; pos < length - 1; ++pos) {
 			connect(getNodeIndex(floor, pos), getNodeIndex(floor, pos + 1));
@@ -29,72 +32,61 @@ ShortestPath::ShortestPath(int ifloors, int ilength, int portals) :
 }
 
 void ShortestPath::addPortal(int fromFloor, int fromD, int toFloor, int toD) {
-	//Obtengo los indices de los vertices segun el piso y la posicion dentro del piso
+	// Obtengo los indices de los vertices segun el piso y la posicion dentro del piso
 	int from = getNodeIndex(fromFloor, fromD);
 	int to = getNodeIndex(toFloor, toD);
-	//Si esas posiciones no tienen un portal, entonces hago la conexion, sino hay un error con el input
-	//Los conecto a traves de un intermediario, asi cumple los 2 metros de costo para viajes por portales
+
+	// Si esas posiciones no tienen un portal, entonces hago la conexion, sino hay un error con el input
+	// Los conecto a traves de un intermediario, asi cumple los 2 metros de costo para viajes por portales
 	connect(from, portalIndex);
 	connect(portalIndex, to);
 
-	//Incremento el indice para apuntar al siguiente vertices intermediario
+	// Incremento el indice para apuntar al siguiente vertices intermediario
 	portalIndex++;
 }
 
 void ShortestPath::connect(int nodef, int nodet) {
-	//Si no estan conectados, los conecto, sino aviso que el pedido es inesperado 
-	if (adjacency[nodef].find(nodet) == adjacency[nodef].end()) {
-		adjacency[nodef].insert(nodet);
-		adjacency[nodet].insert(nodef);
-	} else {
-		std::cout << "Unexpected request: Already connected" << std::endl;
-	}
+	// Si no estan conectados, los conecto, sino aviso que el pedido es inesperado
+	adjacency[nodef].push_back(nodet);
+	adjacency[nodet].push_back(nodef);
 }
 
-//Mapea la posicion especifica a un vertice del grafo
+// Mapea la posicion especifica a un vertice del grafo
 inline int ShortestPath::getNodeIndex(int floor, int pos) {
 	return (floor * this->length) + pos;
 }
 
-void printp(std::vector<int> &p, int floors, int length) {
-	for (int x = floors - 1; x >= 0; --x) {
-		for (int y = 0; y < length; ++y) {
-			printf("%2d ", p[x*length + y]);
-		}
-		std::cout << std::endl;
-	}
-	std::cin.ignore();
-}
-
 int ShortestPath::solve() {
+    Timer timer("Excercise 2 Timer");
 	//Cola
 	std::queue<int> Q;
-	//Distancias desde el vertice inicial
+	// Distancias desde el vertice inicial
 	std::vector<int> distance(this->adjacency.size(), -1);
 	std::vector<int> parent(this->adjacency.size(), -1);
-	//Inicializo el vertice inicial y lo introduzco lentamente en la cola
+	// Inicializo el vertice inicial y lo introduzco lentamente en la cola
 	distance[0] = 0;
 	Q.push(0);
 
 	while (!Q.empty()) {
-		//Desencolo
+		// Desencolo
 		auto now = Q.front();
 		Q.pop();
-		//Itero por los vecinos del vertice actual (a lo sumo 3)
+		// Itero por los vecinos del vertice actual (a lo sumo 3)
 		for (auto neighbor : this->adjacency[now]) {
-			//Si no lo habia alcanzado hasta ahora, actualizo su distancia y lo introduzco en la cola
+			// Si no lo habia alcanzado hasta ahora, actualizo su distancia y lo introduzco en la cola
 			if (distance[neighbor] == -1) {
 				distance[neighbor] = distance[now] + 1;
 				parent[neighbor] = now;
 				Q.push(neighbor);
 			}
+
 			if (neighbor == this->goal) {
 				return distance[this->goal];
 			}
 		}
 	}
-	//Devuelvo la distancia hasta el objetivo, si es -1 es que no se puede alcanzar desde el vertice inicial
-	//printp(distance, this->floors, this->length);
+
+	// Devuelvo la distancia hasta el objetivo, si es -1 es que no se puede alcanzar desde el vertice inicial
 	return distance[this->goal];
 }
 
@@ -119,7 +111,6 @@ void Exercise2::read(std::string input) {
         
 		handle >> length;
         std::string line;
-		//TODO: Preguntar (fijarse caso uno test catedra)
 		floors++; 
 		length++;
 

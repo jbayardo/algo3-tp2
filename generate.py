@@ -41,7 +41,7 @@ def worst_case_2(top):
             for here in xrange(l):
                 for there in xrange(l - 1 * (l == (floor + 1))):
                     edge = "%d %d %d %d" % (floor, here, floor + 1, there)
-                    cases["%d %d\n" % (top, l)].append(edge)
+                    cases["%d %d\n" % (l, l)].append(edge)
 
     return "\n".join([k + "; ".join(v) for k, v in cases.iteritems()])
 
@@ -65,8 +65,8 @@ def worst_case_3(top, max_weight=100):
     top = max(4, top + 1)
     for n in xrange(3, top + 1):
         edges = "; ".join(map(lambda (x, y):
-                          "%d %d %d" % (x, y, (x == 0) * 1 + x * randint(3, max_weight)),
-                          list(combinations(xrange(n + 1), 2))))
+                              "%d %d %d" % (x, y, (x == 0) * 1 + x * randint(3, max_weight)),
+                              list(combinations(xrange(n + 1), 2))))
         cases.append(edges)
     return "\n".join(cases)
 

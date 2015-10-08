@@ -41,9 +41,10 @@ def worst_case_2(top):
             for here in xrange(l):
                 for there in xrange(l - 1 * (l == (floor + 1))):
                     edge = "%d %d %d %d" % (floor, here, floor + 1, there)
-                    cases["%d %d\n" % (l, l)].append(edge)
+                    cases[(l, l)].append(edge)
 
-    return "\n".join([k + "; ".join(v) for k, v in cases.iteritems()])
+    return "\n".join(["%d %d\n" % k + "; ".join(cases[k])
+                      for k in sorted(cases.keys())])
 
 
 ####################################

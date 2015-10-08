@@ -64,7 +64,8 @@ def worst_case_3(top, max_weight=100):
     cases = []
     top = max(4, top + 1)
     for n in xrange(3, top + 1):
-        edges = "; ".join(map(lambda (x, y): "%d %d %d" % (x, y, randint(1, max_weight)),
+        edges = "; ".join(map(lambda (x, y):
+                          "%d %d %d" % (x, y, (x == 0) * 1 + x * randint(3, max_weight)),
                           list(combinations(xrange(n + 1), 2))))
         cases.append(edges)
     return "\n".join(cases)

@@ -20,6 +20,7 @@
 \usepackage{float}
 \usepackage[space]{grffile}
 \usepackage{tpalgo3}
+\usepackage{mathtools}
 \geometry{
  a4paper,
  total={210mm,297mm},
@@ -43,7 +44,7 @@
 % Estos comandos deben ir antes del \maketitle
 \materia{Algorítmos y Estructuras de Datos III} % obligatorio
 
-\titulo{Trabajo Práctico 1}
+\titulo{Trabajo Práctico 2}
 \subtitulo{}
 \grupo{}
 
@@ -64,23 +65,82 @@
 
 \section{Problema 1}
 
-\subsection{Enunciado}
+\subsection{Resolución}
 
-\subsection{Breve descripción del algoritmo}
+Como se puede ver a continuación, el algoritmo recorre los pisos desde 0 a N, actualizando la longitud del camino desde 0 a v, $0 < v \geq N$, con el máximo entre su valor actual y el valor de un camino desde 0 hasta un vértice u, $0 < u < v$, $\exists$ (u, v), más 1.\\
+
+%% TODO: ejemplo
+
+\begin{algorithmic}
+\Procedure{maximizePath}{floors: int, adyacencia: matriz}
+\State best $\gets [0] * floors$
+\State reachable $\gets [false] * floors$
+\For{i in 0...floors} \Comment{O(n)}
+    \If{!reachable[i]}
+        \State continue
+    \EndIf
+    \For{j in i...floors} \Comment{O(n)}
+        \If{adyacencia[i][j-i]}
+            \State best[j] $\gets$ max(best[j], best[i] + 1)
+            \State reachable[j] $\gets$ true
+        \EndIf    
+    \EndFor
+\EndFor
+\State return best[floors-1]
+\EndProcedure\\
+\end{algorithmic}
 
 \subsection{Correctitud}
+
+Veamos que nuestro algoritmo es correcto:
+
+\begin{definition}
+Decimos que un piso es alcanzable cuando existe un camino desde el piso inicial hasta él.
+\end{definition}
+
+\begin{lemma}
+Los pisos no alcanzables no alteran el camino máximo desde 0 al piso n.
+\end{lemma}
+
+\begin{proof}
+Supongamos que un piso no alcanzable sí altera el camino máximo entre los pisos 0 y n. Entonces, el piso no alcanzable debe pertenecer al mismo. Absurdo, pues si pertenece al camino máximo entonces es alcanzable a través del sub-camino que lo une con el piso 0.
+\end{proof}
+
+\begin{lemma}
+Tras la $i$-ésima iteración del ciclo externo del algoritmo, si $i$ es alcanzable y $k$ es un vecino de $i$, $best[k]$ guarda la longitud de alguno de los caminos más largos que unen al piso $0$ con el piso $k$, y pasan por algún nodo alcanzable que es menor a $i$ en el orden de recorrido.
+\end{lemma}
+
+\begin{proof}
+Por inducción en los $i$, cuando $i = 0$ observemos que no entramos en el primer if, pues el 0 es alcanzable con el camino vacío, y por lo tanto vamos a iterar a través de sus vecinos. Como $best[0] = 0$, pondremos a $best[k] = 1$, que es precisamente la longitud del camino que involucra tomar la única arista que une a $0$ con $k$. 
+
+Supongamos que vale cuando $i \leq n$, veamos que vale cuando $i = n + 1$. Si $i$ es alcanzable, vamos a entrar en el ciclo más interno. Observemos que el mismo va a iterar a través de todos los candidatos a vecinos de $i$, y el if va a verificar si efectivamente hay una arista conectando a $i$ con $k$. En el caso en que la haya, entonces hemos encontrado un camino que une al 0 con $k$ (que es el camino que une al 0 con $i$, adhiriéndole la arista que conecta a $i$ con $k$); sin embargo, este camino de longitud $best[i] + 1$ podría no ser el máximo, y por lo tanto debemos tomar $best[k] = max\{best[k], best[i] + 1\}$, que es lo que nos permite afirmar que la longitud es la mejor posible. Cabe destacar que, al estar iterando a través de todos los vecinos de $i$, estamos probando todos los caminos que llegan hasta cada uno de ellos y pasan por $i$.
+\end{proof}
+
+Finalmente, en último paso, $best[n-1]$ tiene exactamente la longitud del camino máximo que une al piso 0 con el piso $n$, y es precisamente lo que devolvemos en el algoritmo.
 
 \subsection{Complejidad}
 
-\subsection{Análisis}
+%% TODO: imagen del mejor y peor caso
+
+Para analizar la complejidad del algoritmo notemos que en peor caso todos los pisos están conectados entre sí (osea forman un grafo completo) haciendo que la complejidad se torne $O(n^2)$, con $n$ la cantidad de pisos. Esto es porque el primer ciclo recorre todos los pisos y por cada uno ejecuta el segundo ciclo, que recorre todos los pisos desde el actual hasta el último. Por otro lado, el mejor caso sucede cuando el único portal existente es el que va del 0 al $n$, la complejidad baja a ser $O(n)$, siendo n la cantidad de pisos: el primer condicional dentro del primer ciclo chequea si el piso es alcanzable, lo que sucede es que el ciclo interno sólo se ejecuta en la primera y en la última iteración del ciclo externo, porque el primer y el último piso son los únicos alcanzables. Analizando la complejidad total, basta con ver que la primera y la última iteración del ciclo externo cuestan $O(n)$, y las demás cuestan $O(1)$, con lo cuál la complejidad se reduce a $O(n)$.
+
+\subsection{Experimentación}
 
 \section{Problema 2}
 
-\subsection{Enunciado}
-
 \subsection{Breve descripción del algoritmo}
 
+El problema es modelable utilizando grafos. Tomando cada posición posible de cada piso como un nodo, y dos posiciones se conectan entre ellas con peso 1 si son posiciones contiguas dentro de un mismo piso, o con peso 2 es una conexión hecha a través de un portal. Con este modelado uno podría buscar el camino mínimo entre el nodo que representa a la primera posición del primer piso y el que representa la ultima posición del ultimo piso.\par
+%TODO: Grafico grafo con pesos
+El problema es que ningún algoritmo de camino mínimo en grafos con peso pertenece a la complejidad requerida por el problema, por lo tanto se tuvo que pensar una manera diferente de modelarlo. \par
+Prestando atención a la complejidad - $O(NL + P)$ - uno puede ver que, siendo $N$ la cantidad de pisos, y $L$ la cantidad de posiciones por piso, con el punto de vista anterior esto es igual a la cantidad de aristas que hay en cada piso, formada por las conexiones entre posiciones contiguas de cada piso; luego, siendo $P$ la cantidad de portales, esto es igual a la cantidad de aristas que no entran en el conjunto anterior, es decir las aristas que representan la conexión de posiciones a través de un portal. De esto podemos concluir que la complejidad es $O(|E|)$ siendo $E$ el conjunto de aristas del grafo, y un algoritmo sobre grafos que sirve para calcular camino mínimo, entre un nodo y todos los demás, que pertenece a esa complejidad es el de $Breadth$-$first$-$search$, específicamente el camino simple de longitud mínima (siendo la longitud la cantidad de aristas que lo forman).\par
+El problema con el grafo que creamos a partir del problema es que contiene aristas con pesos distintos ($1$ o $2$), pero se puede solucionar fácilmente de la siguiente forma: para todas las aristas $(x,y)$ de con peso asociado igual a $2$, las borramos y luego insertamos un nuevo nodo $z$ y agregamos las aristas $(x, z)$ y $(z, y)$.\par
+%TODO: grafico grafo posta
+Con esto logramos transformar el "peso" de las aristas en longitud, ya que, en el nuevo grafo, viajar de $x$ a $y$ va a llevar $2$ pasos.\par\newline
+Luego utilizamos el algoritmo de $Breadth$-$first$-$search$, sin ninguna modificación, desde el nodo que representa a la primera posición del primer piso, y deteniendo el algoritmo cuando se llegue al nodo que representa a la ultima posición del ultimo piso, una vez aquí ya sabemos que tenemos el camino mas corto en longitud desde la entrada hasta el aula de Algo 3.
+
 \subsection{Correctitud}
+Para demostrar que nuestra solución es correcta hay que demostrar que el camino generado, 
 
 \subsection{Complejidad}
 
@@ -90,33 +150,65 @@
 
 \section{Problema 3}
 
-\subsection{Enunciado}
+\subsection{Resolución}
 
-\subsection{Breve descripción del algoritmo}
+La resolución del tercer ejercicio depende básicamente de darse cuenta de las pistas que nos da el enunciado: dado el modelo del problema que nos determina el enunciado, el requerimiento de que no haya ciclos en el grafo de salida se traduce literalmente en que el mismo sea un árbol. Más todavía, el requerimiento de que la diferencia de la suma sea mínima se traduce literalmente en la idea intuitiva de buscar el árbol que más distancia cubra en total, minimizando la cantidad de metros de pasillos a cerrar (y por lo tanto minimizando el costo de cerrarlos).
 
-\subsection{Resolución y Correctitud}
+Como vimos en clase, el concepto análogo pero minimizando la distancia es el del árbol generador mínimo, y ya conocemos los algoritmos de Kruskal y de Prim para encontrarlo; por lo tanto, supusimos que probablemente sea posible modificar los algoritmos que ya conocíamos para resolver el nuevo problema de forma eficiente.
 
-\subsection{Complejidad}
+\begin{lemma}
+Sea $G = (V, E)$ un grafo conexo con pesos en los ejes determinados por $p : E \to \mathbb{R}$. Un árbol generador mínimo con función de pesos $q : E \to \mathbb{R} / q(e) = -p(e)$ es un árbol generador máximo con función de pesos $p$.
+\label{pr:agm}
+\end{lemma}
 
-\subsection{Análisis}
+\begin{proof}
+Sean $T = (V, E_T)$ un árbol generador mínimo con respecto a $q$ y $R = (V, E_R)$ un árbol generador. Tenemos, entonces, que
+
+\begin{align*}
+\sum_{e \in E_T} q(e) &\leq \sum_{e \in E_R} q(e)\\
+\sum_{e \in E_T} -p(e) &\leq \sum_{e \in E_R} -p(e)\\
+-\sum_{e \in E_T} p(e) &\leq -\sum_{e \in E_R} p(e)\\
+\sum_{e \in E_T} p(e) &\geq \sum_{e \in E_R} p(e)
+\end{align*}
+
+Es decir, negar los pesos de $T$ nos da un árbol generador máximo de $G$ con respecto a la función de pesos $p$.
+\end{proof}
+
+Observemos, entonces, que transformar pesos y correr Kruskal es una manera correcta de computar el árbol generador máximo de $G$, ya que Kruskal es correcto (por lo visto en la teórica) y el lema \ref{pr:agm} nos garantiza que hacer la traducción descripta es correcto. Además, realizar la traducción es una operación relativamente barata, en tanto que pasar por todas las aristas y cambiar los pesos es una operación que toma $\Theta(m)$, mientras que Kruskal toma $O(m log(m))$ si utilizamos un disjoint set como vimos en el taller, por lo que no nos cambia la complejidad asintótica:
+
+\begin{algorithm}[h!]
+\caption{Algoritmo de Kruskal para árbol generador mínimo. \label{alg:kruskal}}
+
+\begin{algorithmic}[h!]
+\Procedure{Kruskal}{$G$ grafo, $p$ función de pesos}
+\State queue $\gets$ MIN-HEAPIFY($G.E$, $p$) \Comment $O(m)$
+\State set $\gets$ Disjoint set con $|G.V|$ elementos \Comment $O(1)$
+\State E $\gets \{\}$ \Comment $O(1)$
+
+\While{$|E| < |G.V| - 1$} \Comment $O(m log(m))$
+\State current $\gets$ queue.pop() \Comment $O(log(m))$
+\State setFrom $\gets$ set.find(current.from) \Comment $O(1)$
+\State setTo $\gets$ set.find(current.to) \Comment $O(1)$
+
+\If{setFrom $\neq$ setTo} \Comment $O(1)$
+\State set.merge(setFrom, setTo) \Comment $O(1)$
+\State E $\gets E \cup \{($current.from$,$ current.to$)\}$ \Comment $O(1)$
+\EndIf
+\EndWhile
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Experimentación}
+
+Observemos que la transformación de los pesos de las aristas siempre toma exactamente $\Theta(m)$, ya que no nos queda otra más que recorrer todas las aristas para cambiar los pesos. Observemos, además, que en el algoritmo de Kruskal el mejor caso es en el que sólo tenemos que hacer heapify y tomar exactamente $n - 1$ aristas para completar el grafo sin encontrarnos ciclos, permitiéndonos entrar siempre dentro del if. Queda claro que esto sólo sucedería si el grafo fuese acíclico y tuviese exactamente $n - 1$ aristas, es decir, fuese un árbol.
+
+Por otro lado, caracterizar el peor caso es significativamente más difícil. Si bien es claro que el grafo debería ser denso (teniendo entonces que ya el pre-procesamiento tomaría $\Theta(n^2)$), lo ideal sería también forzar al algoritmo de Kruskal a tener que hacer pop para todas las aristas antes de poder terminar; sin embargo, no logramos encontrar una forma fácil de generar casos en los que esto ocurra, ya que básicamente el orden que utilice Kruskal depende de qué swaps haga la implementación de MIN-HEAPIFY (que asimismo depende ampliamente del orden en el cuál las aristas sean dadas en el input) y cuál termine siendo el orden final de las aristas, ambas cuestiones siendo muy difíciles de predecir.
 
 \pagebreak
 
 \section{Código fuente}
 
 \subsection{Main}
-\lstinputlisting[language=C++]{../src/main.cpp}
-
-\subsection{Ejercicio 1}
-\lstinputlisting[language=C++]{../src/Path.h}
-\lstinputlisting[language=C++]{../src/Path.cpp}
-
-\subsection{Ejercicio 2}
-\lstinputlisting[language=C++]{../src/Median.h}
-\lstinputlisting[language=C++]{../src/Median.cpp}
-
-\subsection{Ejercicio 3}
-\lstinputlisting[language=C++]{../src/Explorers.h}
-\lstinputlisting[language=C++]{../src/Explorers.cpp}
 
 \end{document}

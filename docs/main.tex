@@ -203,15 +203,13 @@ Por otro lado, el mejor caso debería minimizar la cantidad de ejecuciones del c
 
 \pagebreak
 
-Para generar casos aleatorios, primero aseg
+Para generar casos aleatorios, primero aseguramos que haya solución generando una arista que conecte el piso 0 con el N. Luego por cada piso i, decidimos generar una cantidad aleatoria X de portales entre i y N. Luego de determinar X, se decide si un portal o no se va a crear con probabilidad $0.25$. Si se decide crear el portal, se elige un número $z$ entre $i+1$ y $N$ y se crea el portal $(i, z)$. No importa que haya repetidos, ya que usamos un conjunto para guardar los portales en el código de generación, y el conjunto por definición no permite repeticiones.
 
-En la práctica, los experimentos realizados nos permitieron comprobar que efectivamente la complejidad es como suponíamos. La figura \ref{grf:ex1} muestra los resultados. 
-Observemos que en ambos casos, dividiendo el tiempo de ejecución por su complejidad acorde al tamaño del problema en esa instancia, se termina convergiendo hacia constantes como era de esperarse.
-Las grandes variaciones para las instancias pequeñas, se debe a que al ser el tamaño del problema tan pequeño, factores físicos como estado de caché del procesador y carga del sistema operativo pasan a ser mucho más influyentes que la complejidad de la solución en sí, por eso las variaciones.
+En la práctica, los experimentos realizados nos permitieron comprobar que efectivamente la complejidad es como suponíamos. La figura \ref{grf:ex1} muestra los resultados. Observemos que en ambos casos, dividiendo el tiempo de ejecución por su complejidad acorde al tamaño del problema en esa instancia, se termina convergiendo hacia constantes como era de esperarse. Las grandes variaciones para las instancias pequeñas, se debe a que al ser el tamaño del problema tan pequeño, factores físicos como estado de caché del procesador y carga del sistema operativo pasan a ser mucho más influyentes que la complejidad de la solución en sí, por eso las variaciones. En el caso aleatorio, las variaciones que observamos suponemos que debe estar relacionado con las instancias en las que haya habido un camino muy corto de portales que conecten al nodo inicial con el final.
 
 \begin{figure}
 \centering
-\includegraphics[width=12cm]{ex1}
+\includegraphics[width=10cm]{ex1}
 \caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas. \label{grf:ex1}}
 \end{figure}
 
@@ -229,7 +227,6 @@ Las grandes variaciones para las instancias pequeñas, se debe a que al ser el t
 \Procedure{BFS}{$G$ grafo, $t$ nodo final}
 \State queue $\gets$ Cola vacia \Comment $O(1)$
 \State distances $\gets$ Arreglo de tamaño $|G.V|$ inicializado a -1 \Comment $O(n)$
-\State parent $\gets$ Arreglo de tamaño $|G.V|$ inicializado a -1 \Comment $O(n)$
 
 \State distances[0] = 0 \Comment $O(1)$
 \State queue.push(0) \Comment $O(1)$
@@ -240,7 +237,6 @@ Las grandes variaciones para las instancias pequeñas, se debe a que al ser el t
     \For{neighbor vecino de current} \Comment $O(dg(current))$
         \If{distance[neighbor] $=$ -1} \Comment $O(1)$
             \State distance[neighbor] $\gets$ distance[current] + 1 \Comment $O(1)$
-            \State parent[neighbor] $\gets$ current \Comment $O(1)$
             \State queue.push(neighbor) \Comment $O(1)$
         \EndIf
         
@@ -320,6 +316,8 @@ Cabe destacar, entonces, que estos lemas nos permiten afirmar que si encontramos
 Veamos que tras modelar nuestro grafo se obtiene que, independientemente de los portales dados, nuestro preprocesamiento genera un nodo por cada metro de cada piso del edificio, por lo que tenemos $NL$ nodos y hasta este momento una complejidad de $O(NL)$. Luego veremos que por cada conexión entre portales, agregamos un nodo intermedio entre los dos extremos de la conexión, por lo que ahora tendremos $NL+P$ nodos, con $P$ la cantidad de portales, formando así una complejidad de preprocesamiento de $O(NL+P)$. Notemos que nuestro algoritmo termina apenas se evalúa un nodo que tenga como vecino al último metro del último piso -de ahora en más, nodo 'fin'-, habiendo dicho esto, centraremos nuestro análisis en los portales dados porque es lo único que logrará variar la cantidad de iteraciones que tomará para llegar a dicho nodo. \\
 
 Ahora bien, si quisiéramos obtener el mejor caso, sería minimizando la cantidad de portales porque habría menos nodos a considerar a la hora de encolar, chequear sus vecinos e iterar a través de ellos, además de un preprocesado menos costoso. Dado que es condición necesaria del problema que exista un camino posible, necesitamos que exista al menos un camino del piso 0 al piso n, y para minimizar dicho camino de portales podemos considerar un portal único que vaya desde el metro 0 del piso 0 al nodo 'fin' (metro $L$ del nodo $N$). En este caso (Figura \ref{grf:ex2-best}), en la primera iteración nuestro algoritmo encolará a los dos vecinos del metro 0 (el metro 1 y el portal intermediario que llevará al nodo 'fin'), luego al desencolar el portal intermediario iteraremos por su único vecino y dado que es el nodo 'fin' terminaremos la ejecución del algoritmo. Notemos que la resolución del camino mínimo propiamente dicha tomó tiempo constante en este caso, dado que no depende del largo de los pasillos $L$, ni de la cantidad de pisos $N$; sin embargo como contamos con el preprocesamiento antes mencionado, la complejidad se vuelve $O(NL+1)$, que es $O(NL)$. \\
+
+\pagebreak
     
 \begin{figure}
     \centering
@@ -338,6 +336,8 @@ Ahora bien, si quisiéramos obtener el mejor caso, sería minimizando la cantida
 Por otro lado, veamos que en peor caso (figuras \ref{grf:ex2-worst-1} y \ref{grf:ex2-worst-2}), la mayor cantidad de iteraciones se da cuando tengamos que pasar por todos los nodos para encontrar el camino mínimo que llega al nodo 'fin' y además cada nodo tenga la mayor cantidad de vecinos (para así maximizar la cantidad de iteraciones del ciclo interno); la única excepción a esto es el anteúltimo piso, ya que aquí todos los nodos tendrán que estar conectados con el metro 0 del último piso -dado que de lo contrario, estarían más cerca de llegar al nodo 'fin'.\\
 
 Notemos que al momento de buscar maximizar la cantidad de vecinos de un nodo $n$ en el piso $i$, es necesario que $n$ esté conectado con todos los nodos del piso $i+1$ pero con ninguno superior a dicho piso, porque si lo estuviera, el algoritmo estaría aproximándose más rápidamente al portal que comunica con el último piso, y terminaría antes. De esta forma se tiene que el último piso tendrá un solo portal (en el metro 0), el anteúltimo piso tendrá $L$ portales (que comunican con el metro 0 del último piso), y todos los anteriores tendrán $L^2$ portales (cada metro del $i$-ésimo piso con todos los metros del $i+1$-ésimo piso). Con lo cuál la cantidad de portales será: $P = 1+L+(N-2)L^2$. \\
+
+\pagebreak
 
 \begin{figure}
     \centering
@@ -374,12 +374,12 @@ Notemos que al momento de buscar maximizar la cantidad de vecinos de un nodo $n$
 
 Para la generación de los casos de prueba, decidimos tomar $L = N$ para simplificar la comprensión de los gráficos (de cualquier forma, mirar los gráficos por separado da lo esperado, pero es más complicado de expresar los resultados). Observemos en la figura \ref{grf:ex2} que tanto el mejor caso como el peor caso tienden a constantes, implicando que el crecimiento asintótico efectivamente es como esperábamos. Cabe destacar que, en particular para el peor caso, la función $NL + P = NL + 1+L+(N-2)L^2 \in O(L^3)$, pues $N = L$ implica que el último término es $O(L^3)$, y el primero es $O(L^2)$.
 
-Para el caso aleatorio, lo que se decidió hacer es generar un árbol que conecte cada piso con el siguiente hasta N para asegurar que exista solución. Luego se generan todas los pares de pisos posibles, se elige una cantidad aleatoria de estos pares, entre $(L-1)*(L-3)$ y $(L-1)*(L-2)$, y se generan nuevos portales usando este par de pisos y 2 posiciones aleatorias dentro de los pisos. Esto se hizo para que el grafo sea más denso y poder diferenciarse del mejor caso, y a su vez para que no sea tan denso como en el peor caso.
+Para el caso aleatorio, lo que se decidió hacer es generar un árbol que conecte cada piso con el siguiente hasta N para asegurar que exista solución. Luego se generan todas los pares de pisos posibles, se elige una cantidad aleatoria de estos pares, entre $\frac{(L-1)*(L-2)}{2}$ y $\frac{(L-1)*(L)}{2}$, y se generan nuevos portales usando este par de pisos y 2 posiciones aleatorias dentro de los pisos. Esto se hizo para que el grafo sea más denso y poder diferenciarse del mejor caso, y a su vez para que no sea tan denso como en el peor caso. Sin embargo, observemos que el tiempo de corrida de los casos aleatorios es muy cercana al mejor caso, indicándonos que en general la longitud del camino mínimo que conecta al nodo inicial con el final debía ser mas bien chica.
 
 \begin{figure}
 \centering
 \centerline{\includegraphics[width=10cm]{ex2}}
-\caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas. \label{grf:ex2}}
+\caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas. Como el crecimiento del peor caso es cúbico, el caso aleatorio y el mejor caso se ven casi iguales comparados con el peor caso.\label{grf:ex2}}
 \end{figure}
 
 
@@ -439,8 +439,6 @@ Observemos, entonces, que transformar pesos y correr Kruskal es una manera corre
 
 \subsection{Complejidad y experimentación}
 
-Observemos que la transformación de los pesos de las aristas siempre toma exactamente $\Theta(m)$, ya que no nos queda otra más que recorrer todas las aristas para cambiar los pesos. Observemos, además, que en el algoritmo de Kruskal el mejor caso es en el que sólo tenemos que hacer heapify y tomar exactamente $n - 1$ aristas para completar el grafo sin encontrarnos ciclos, permitiéndonos entrar siempre dentro del if. Queda claro que esto sólo sucedería si el grafo fuese acíclico y tuviese exactamente $n - 1$ aristas, es decir, fuese un árbol. En este caso, tendríamos que $m \in O(n)$, y por lo tanto la complejidad temporal sería de $O(n log(n))$.
-
 \begin{figure}
     \centering
     
@@ -458,6 +456,9 @@ Observemos que la transformación de los pesos de las aristas siempre toma exact
     \caption{Ejemplo de una corrida de mejor caso para el ejercicio 3. El arreglo de arriba representa el el vector interno de la cola de prioridad. \label{grf:ex3-best}}
 \end{figure}
 
+\pagebreak
+
+Observemos que la transformación de los pesos de las aristas siempre toma exactamente $\Theta(m)$, ya que no nos queda otra más que recorrer todas las aristas para cambiar los pesos. Observemos, además, que en el algoritmo de Kruskal el mejor caso es en el que sólo tenemos que hacer heapify y tomar exactamente $n - 1$ aristas para completar el grafo sin encontrarnos ciclos, permitiéndonos entrar siempre dentro del if. Queda claro que esto sólo sucedería si el grafo fuese acíclico y tuviese exactamente $n - 1$ aristas, es decir, fuese un árbol. En este caso, tendríamos que $m \in O(n)$, y por lo tanto la complejidad temporal sería de $O(n log(n))$. \\
 Por otro lado, caracterizar el peor caso es más difícil: si bien es claro que el grafo debería ser denso (teniendo entonces que ya el pre-procesamiento tomaría $\Theta(n^2)$), lo ideal sería también forzar al algoritmo de Kruskal a tener que hacer pop para todas las aristas antes de poder terminar. Observemos que el algoritmo va a hacer pop hasta que haya logrado completar un árbol, por lo que la condición fundamental para que esto suceda es que las aristas que le permitan completar un árbol sean las últimas en ser procesadas. Cabe destacar entonces que el pre-procesamiento lo que hace es dar vuelta el orden de recorrido de las aristas, por lo que las aristas que fuesen las primeras al ordenarlas en el grafo original van a ser las últimas en el grafo procesado; implicando que las aristas que para completar el árbol deberían ser las de menor peso del grafo. Finalmente, para generar un grafo de $n$ nodos con estas características lo único que debemos hacer es tomar $K_n$, asignar los pesos de cualquier forma (pero siempre mayores o iguales a un número $M > 1$), y luego tomar algún nodo arbitrario del grafo, y hacer que todas sus aristas tengan peso $M - 1$. Nótese, sin embargo, que jamás será posible popear exactamente todas las aristas, ya que al llegar a la primera de las que conectan al nodo, simplemente tomaremos a esa (y no va a haber una asignación de pesos particular que logre que esto cambie). En este caso, tendríamos que $m \in O(n^2)$, por lo que la complejidad temporal pasaría a ser $O(n^2 log(n))$.
 
 \begin{figure}
@@ -477,12 +478,12 @@ Por otro lado, caracterizar el peor caso es más difícil: si bien es claro que 
 \end{figure}
 
 Como puede verse en la figura \ref{grf:ex3}, tenemos que ambos casos parecerían efectivamente estar en la complejidad deseada. Al igual que en los otros ejercicios, tenemos una variación muy amplia en la medición de tiempos al principio, pero terminan convergiendo a una constante, lo que demuestra que efectivamente la complejidad es como anunciamos anteriormente.
-Para generar los casos aleatorios para este ejercicio, se generaron todos los pares posibles de nodos del grafo, se desordenó esta lista, y luego se eligieron $M = 2 + ((N - 1)*(N - 2))/2$ pares de la lista para generar aristas con pesos aleatorios. Esta elección de M no es casualidad, ya que nos asegura que sin importar que pares elijamos, el grafo va a ser conexo, como se vió en uno de los ejercicios de la práctica.
+Para generar los casos aleatorios para este ejercicio, se generaron todos los pares posibles de nodos del grafo, se desordenó esta lista, y luego se eligió una cantidad aleatoria M,  $2 + \frac{((N - 1)*(N - 2))}{2} \leq M \leq \frac{N*(N-1)}{2}$, de pares de la lista para generar aristas con pesos aleatorios. Esta elección de M no es casualidad, ya que nos asegura que sin importar que pares elijamos, el grafo va a ser conexo, como se vió en uno de los ejercicios de la práctica. Observemos que en el caso aleatorio, tendemos a tener un runtime bastante bien balanceado, tendiendo en general hacia el mejor caso. No nos queda claro el por qué de esta situación.
 
 \begin{figure}
 \centering
 \includegraphics[width=10cm]{ex3}
-\caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas.\label{grf:ex3}}
+\caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas. \label{grf:ex3}}
 \end{figure}
 
 \pagebreak

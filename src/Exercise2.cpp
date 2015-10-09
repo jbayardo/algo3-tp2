@@ -14,9 +14,9 @@ El edificio se puede ver como una matriz de ixj siendo i pisos y j longuitud de 
 de una posición a un índice en el vector de adyacencia, para convertir una dirección x,y en una dirección lineal.
 
 Los intermediarios los dejo a lo último de la lista.*/
-ShortestPath::ShortestPath(int ifloors, int ilength, int portals) : 
-	floors(ifloors), 
-	length(ilength), 
+ShortestPath::ShortestPath(int ifloors, int ilength, int portals) :
+	floors(ifloors),
+	length(ilength),
 	portalIndex(floors * length),
 	goal((floors * length) - 1),
 	adjacency(std::vector<std::list<int>>(floors * length + portals)) {
@@ -62,7 +62,6 @@ int ShortestPath::solve() {
 	std::queue<int> Q;
 	// Distancias desde el vertice inicial
 	std::vector<int> distance(this->adjacency.size(), -1);
-	std::vector<int> parent(this->adjacency.size(), -1);
 	// Inicializo el vertice inicial y lo introduzco lentamente en la cola
 	distance[0] = 0;
 	Q.push(0);
@@ -76,7 +75,6 @@ int ShortestPath::solve() {
 			// Si no lo habia alcanzado hasta ahora, actualizo su distancia y lo introduzco en la cola
 			if (distance[neighbor] == -1) {
 				distance[neighbor] = distance[now] + 1;
-				parent[neighbor] = now;
 				Q.push(neighbor);
 			}
 
@@ -108,10 +106,10 @@ void Exercise2::read(std::string input) {
     // Mientras que podamos leer un piso
     while (handle >> floors) {
         int length;
-        
+
 		handle >> length;
         std::string line;
-		floors++; 
+		floors++;
 		length++;
 
         // Leemos una linea no vacia

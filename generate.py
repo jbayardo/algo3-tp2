@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import os
 from collections import defaultdict
-from random import randint
+from random import randint, choice
 from itertools import combinations
 
 EX_DIR = "experiments/"
@@ -108,8 +108,18 @@ def best_case_3(top):
     return "\n".join(cases)
 
 
-def random_case_3():
-    pass
+def random_case_3(top, max_weight=100):
+    cases = []
+    for x in xrange(3, top + 1):
+        m = 2 + ((x - 1)*(x - 2))/2
+        edges = {}
+        all_edges = list(combinations(xrange(x + 1), 2))
+        while len(edges) < m:
+            x, y = choice(all_edges)
+            edges[(x, y)] = randint(3, max_weight)
+        cases.append("; ".join(["%d %d %d" % (k[0], k[1], edges[k]) for k in edges]))
+    return "\n".join(cases)
+
 
 
 def worst_case_3(top, max_weight=100):

@@ -111,15 +111,12 @@ def best_case_3(top):
 def random_case_3(top, max_weight=100):
     cases = []
     for x in xrange(3, top + 1):
-        print x
         m = 2 + ((x - 1)*(x - 2))/2
-        edges = []
         all_edges = list(combinations(xrange(x + 1), 2))
         shuffle(all_edges)
-        for y in xrange(m):
-            here, there = all_edges[y]
-            edges.append("%d %d %d" % (here, there, randint(3, x)))
-        cases.append("; ".join(edges))
+        edges = "; ".join(["%d %d %d" % (a, b, randint(3, max_weight))
+                           for (a, b) in all_edges[:m]])
+        cases.append(edges)
     return "\n".join(cases)
 
 

@@ -28,9 +28,9 @@
      showgrid="true"
      inkscape:current-layer="svg2"
      inkscape:document-units="px"
-     inkscape:cy="-3154.583"
-     inkscape:cx="-503.17279"
-     inkscape:zoom="0.45"
+     inkscape:cy="-3235.3787"
+     inkscape:cx="-676.40385"
+     inkscape:zoom="0.64"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -1115,7 +1115,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2886,7 +2886,7 @@
          height="250"
          x="500"
          y="802.36218" /></flowRegion><flowPara
-       id="flowPara25952"></flowPara></flowRoot>  <circle
+       id="flowPara25952" /></flowRoot>  <circle
      inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej1/worstcase/start.png"
      r="21.269905"
      cy="1252.3622"
@@ -3046,7 +3046,7 @@
          height="150"
          x="-300"
          y="1702.3622" /></flowRegion><flowPara
-       id="flowPara26998"></flowPara></flowRoot>  <ellipse
+       id="flowPara26998" /></flowRoot>  <ellipse
      inkscape:export-ydpi="87.300003"
      inkscape:export-xdpi="87.300003"
      style="fill:#afafff;fill-opacity:1;stroke:#0000ff;stroke-width:3.91700315;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -3339,7 +3339,7 @@
        sodipodi:role="line"
        id="tspan27867"
        x="400"
-       y="2802.3623"></tspan></text>
+       y="2802.3623" /></text>
   <circle
      r="0"
      cy="3082.3621"
@@ -3624,7 +3624,7 @@
        y="3031.5779"
        x="216.87238"
        id="tspan28278"
-       sodipodi:role="line">          </tspan></text>
+       sodipodi:role="line" /></text>
   <circle
      r="48.041496"
      cy="2302.3621"
@@ -3977,28 +3977,12 @@
      d="m 2000,1552.3622 c 11.8518,28.8889 27.8309,56.4117 35.5556,86.6666 1.639,6.4195 -5.926,11.8519 -8.8889,17.7778 -27.8435,55.6869 -5.981,17.2623 -44.4445,71.1111 -6.2094,8.6932 -10.9386,18.4597 -17.7778,26.6667 -13.4127,16.0952 -31.3562,28.0842 -44.4444,44.4444 -6.6737,8.3422 -11.1041,18.3246 -17.7778,26.6667 -5.2353,6.5441 -11.8518,11.8519 -17.7778,17.7778 -8.8888,8.8889 -17.7777,17.7778 -26.6666,26.6667 -5.926,5.9259 -11.0734,12.7494 -17.7778,17.7777 -5.3003,3.9753 -12.4775,4.9137 -17.7778,8.8889 -6.7044,5.0283 -11.8518,11.8519 -17.7778,17.7778 -8.8888,5.9259 -17.7777,11.8519 -26.6666,17.7778 -8.8889,5.9259 -19.1126,10.2237 -26.6667,17.7778 -4.6848,4.6848 -4.204,13.0929 -8.8889,17.7777 -4.6848,4.6849 -12.2651,5.2138 -17.7778,8.8889 -3.4865,2.3244 -5.4023,6.5646 -8.8888,8.8889 -5.5127,3.6751 -13.093,4.204 -17.7778,8.8889 -4.6849,4.6849 -3.5886,13.8025 -8.8889,17.7778 -7.4958,5.6218 -18.2862,4.6986 -26.6667,8.8889 -9.5552,4.7776 -17.1114,13.0001 -26.6666,17.7777 -8.3806,4.1903 -18.2862,4.6987 -26.6667,8.8889 -3.7479,1.874 -5.141,7.015 -8.8889,8.8889 -5.3003,2.6502 -12.4775,-2.6501 -17.7778,0 -3.7479,1.874 -4.9136,7.5638 -8.8889,8.8889 -8,2.6667 -18.6666,-2.6667 -26.6666,0 -6.2854,2.0951 -11.3502,7.282 -17.7778,8.8889 -6.4374,1.6093 -20.9633,0 -28.8889,0"
      id="path29162"
      inkscape:connector-curvature="0" />
-  <path
-     style="opacity:0.72000002;fill:#ff0000;fill-opacity:1;stroke:#ff00ff;stroke-width:5;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:28.52000046;stroke-opacity:1"
-     d="M -849.99999,4552.3622 -450,4252.3622"
-     id="path29260"
-     inkscape:connector-curvature="0"
-     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"
-     inkscape:export-xdpi="87.300003"
-     inkscape:export-ydpi="87.300003" />
-  <path
-     style="opacity:0.72000002;fill:#ff0000;fill-opacity:1;stroke:#00ff00;stroke-width:3;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:28.52000046;stroke-opacity:1"
-     d="m -849.99999,4252.3622 399.99999,300"
-     id="path29262"
-     inkscape:connector-curvature="0"
-     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"
-     inkscape:export-xdpi="87.300003"
-     inkscape:export-ydpi="87.300003" />
   <circle
      inkscape:export-ydpi="87.300003"
      inkscape:export-xdpi="87.300003"
      style="fill:#afafff;fill-opacity:1;stroke:#0000ff;stroke-width:4.07668734;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="circle29212"
-     cx="-849"
+     cx="-949"
      cy="4253.3623"
      r="50"
      inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png" />
@@ -4007,7 +3991,7 @@
      inkscape:export-xdpi="87.300003"
      style="fill:#afafff;fill-opacity:1;stroke:#0000ff;stroke-width:4.07668734;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="circle29214"
-     cx="-449"
+     cx="-649"
      cy="4253.3623"
      r="50"
      inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png" />
@@ -4016,7 +4000,7 @@
      inkscape:export-xdpi="87.300003"
      style="fill:#afafff;fill-opacity:1;stroke:#0000ff;stroke-width:4.07668734;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="circle29216"
-     cx="-849"
+     cx="-949"
      cy="4553.3623"
      r="50"
      inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png" />
@@ -4025,89 +4009,22 @@
      inkscape:export-xdpi="87.300003"
      style="fill:#afafff;fill-opacity:1;stroke:#0000ff;stroke-width:4.07668734;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="circle29218"
-     cx="-449"
+     cx="-649"
      cy="4553.3623"
      r="50"
      inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png" />
-  <path
-     inkscape:export-ydpi="87.300003"
-     inkscape:export-xdpi="87.300003"
-     style="fill:#000088;fill-opacity:0.17616583;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-     d="m -799.99999,4252.3622 299.99999,0"
-     id="path29220"
-     inkscape:connector-curvature="0"
-     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png" />
-  <path
-     inkscape:export-ydpi="87.300003"
-     inkscape:export-xdpi="87.300003"
-     style="fill:#000088;fill-opacity:0.17616583;fill-rule:evenodd;stroke:#00ff00;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-     d="m -799.99999,4552.3622 299.99999,0"
-     id="path29222"
-     inkscape:connector-curvature="0"
-     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png" />
-  <path
-     inkscape:export-ydpi="87.300003"
-     inkscape:export-xdpi="87.300003"
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     d="m -849.99999,4502.3622 0,-200"
-     id="path29224"
-     inkscape:connector-curvature="0"
-     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png" />
-  <text
-     inkscape:export-ydpi="87.300003"
-     inkscape:export-xdpi="87.300003"
-     xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:30px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="-908"
-     y="4402.3623"
-     id="text29226"
-     sodipodi:linespacing="125%"
-     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"><tspan
-       sodipodi:role="line"
-       id="tspan29228"
-       x="-908"
-       y="4402.3623"
-       style="font-size:45px">20</tspan></text>
-  <text
-     inkscape:export-ydpi="87.300003"
-     inkscape:export-xdpi="87.300003"
-     xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:45px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="-674"
-     y="4246.3623"
-     id="text29230"
-     sodipodi:linespacing="125%"
-     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"><tspan
-       sodipodi:role="line"
-       id="tspan29232"
-       x="-674"
-       y="4246.3623">15</tspan></text>
-  <text
-     inkscape:export-ydpi="87.300003"
-     inkscape:export-xdpi="87.300003"
-     xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:45px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="-660"
-     y="4592.3623"
-     id="text29234"
-     sodipodi:linespacing="125%"
-     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"><tspan
-       sodipodi:role="line"
-       id="tspan29236"
-       x="-660"
-       y="4592.3623">1</tspan></text>
   <text
      inkscape:export-ydpi="87.300003"
      inkscape:export-xdpi="87.300003"
      sodipodi:linespacing="125%"
      id="text29238"
      y="4584.1514"
-     x="-876.57709"
+     x="-976.57709"
      style="font-style:normal;font-weight:normal;font-size:85.89802551px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
      xml:space="preserve"
      inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"><tspan
        y="4584.1514"
-       x="-876.57709"
+       x="-976.57709"
        id="tspan29240"
        sodipodi:role="line">0</tspan></text>
   <text
@@ -4115,96 +4032,43 @@
      inkscape:export-xdpi="87.300003"
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:85.89802551px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="-476.57709"
+     x="-676.57709"
      y="4584.1514"
      id="text29242"
      sodipodi:linespacing="125%"
      inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"><tspan
        sodipodi:role="line"
        id="tspan29244"
-       x="-476.57709"
+       x="-676.57709"
        y="4584.1514">1</tspan></text>
   <text
      inkscape:export-ydpi="87.300003"
      inkscape:export-xdpi="87.300003"
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:85.89802551px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="-876.57709"
+     x="-976.57709"
      y="4284.1514"
      id="text29246"
      sodipodi:linespacing="125%"
      inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"><tspan
        sodipodi:role="line"
        id="tspan29248"
-       x="-876.57709"
-       y="4284.1514">2</tspan></text>
+       x="-976.57709"
+       y="4284.1514">3</tspan></text>
   <text
      inkscape:export-ydpi="87.300003"
      inkscape:export-xdpi="87.300003"
      sodipodi:linespacing="125%"
      id="text29250"
      y="4284.1514"
-     x="-476.57709"
+     x="-676.57709"
      style="font-style:normal;font-weight:normal;font-size:85.89802551px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
      xml:space="preserve"
      inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"><tspan
        y="4284.1514"
-       x="-476.57709"
+       x="-676.57709"
        id="tspan29252"
-       sodipodi:role="line">3</tspan></text>
-  <path
-     inkscape:connector-curvature="0"
-     id="path29254"
-     d="m -449.99999,4502.3622 0,-200"
-     style="fill:none;fill-rule:evenodd;stroke:#00ff00;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     inkscape:export-xdpi="87.300003"
-     inkscape:export-ydpi="87.300003"
-     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png" />
-  <text
-     sodipodi:linespacing="125%"
-     id="text29256"
-     y="4402.3623"
-     x="-444"
-     style="font-style:normal;font-weight:normal;font-size:30px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     xml:space="preserve"
-     inkscape:export-xdpi="87.300003"
-     inkscape:export-ydpi="87.300003"
-     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"><tspan
-       style="font-size:45px"
-       y="4402.3623"
-       x="-444"
-       id="tspan29258"
-       sodipodi:role="line">1</tspan></text>
-  <text
-     sodipodi:linespacing="125%"
-     id="text29264"
-     y="3103.197"
-     x="-3126.6621"
-     style="font-style:normal;font-weight:normal;font-size:45px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     xml:space="preserve"
-     inkscape:export-xdpi="87.300003"
-     inkscape:export-ydpi="87.300003"
-     transform="matrix(0.795979,-0.60532424,0.60532424,0.795979,0,0)"
-     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"><tspan
-       y="3103.197"
-       x="-3126.6621"
-       id="tspan29266"
-       sodipodi:role="line">10</tspan></text>
-  <text
-     sodipodi:linespacing="125%"
-     id="text29268"
-     y="3838.5195"
-     x="2307.4583"
-     style="font-style:normal;font-weight:normal;font-size:45px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     xml:space="preserve"
-     inkscape:export-xdpi="87.300003"
-     inkscape:export-ydpi="87.300003"
-     transform="matrix(0.7823844,0.62279583,-0.62279583,0.7823844,0,0)"
-     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"><tspan
-       y="3838.5195"
-       x="2307.4583"
-       id="tspan29270"
-       sodipodi:role="line">1</tspan></text>
+       sodipodi:role="line">4</tspan></text>
   <rect
      style="opacity:0.72000002;fill:none;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:28.52000046;stroke-opacity:1"
      id="rect29274"
@@ -4321,8 +4185,8 @@
        y="4144.3623">Peso</tspan></text>
   <text
      xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#008000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
-     x="-848.47852"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+     x="-348.79102"
      y="4092.3623"
      id="text29302"
      sodipodi:linespacing="125%"
@@ -4331,58 +4195,58 @@
      inkscape:export-ydpi="87.300003"><tspan
        sodipodi:role="line"
        id="tspan29304"
-       x="-848.47852"
+       x="-348.79102"
        y="4092.3623"
-       style="text-align:center;text-anchor:middle;fill:#008000;">0-1</tspan><tspan
+       style="text-align:center;text-anchor:middle;fill:#000000;">0-1</tspan><tspan
        sodipodi:role="line"
-       x="-848.47852"
+       x="-348.79102"
        y="4142.3623"
        id="tspan29306"
-       style="text-align:center;text-anchor:middle;fill:#008000;">1</tspan></text>
+       style="text-align:center;text-anchor:middle;fill:#000000;">1</tspan></text>
   <text
      sodipodi:linespacing="125%"
      id="text29308"
      y="4092.3623"
-     x="-748.47852"
-     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#008000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+     x="-450.23633"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
      xml:space="preserve"
      inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"
      inkscape:export-xdpi="87.300003"
      inkscape:export-ydpi="87.300003"><tspan
-       style="text-align:center;text-anchor:middle;fill:#008000;"
+       style="text-align:center;text-anchor:middle;fill:#000000;"
        y="4092.3623"
-       x="-748.47852"
+       x="-450.23633"
        id="tspan29310"
        sodipodi:role="line">1-2</tspan><tspan
-       style="text-align:center;text-anchor:middle;fill:#008000;"
+       style="text-align:center;text-anchor:middle;fill:#000000;"
        id="tspan29312"
        y="4142.3623"
-       x="-748.47852"
+       x="-450.23633"
        sodipodi:role="line">1</tspan></text>
   <text
      sodipodi:linespacing="125%"
      id="text29314"
      y="4092.3623"
-     x="-648.47852"
-     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#008000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+     x="-551.03711"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
      xml:space="preserve"
      inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"
      inkscape:export-xdpi="87.300003"
      inkscape:export-ydpi="87.300003"><tspan
-       style="text-align:center;text-anchor:middle;fill:#008000;"
+       style="text-align:center;text-anchor:middle;fill:#000000;"
        y="4092.3623"
-       x="-648.47852"
+       x="-551.03711"
        id="tspan29316"
        sodipodi:role="line">1-3</tspan><tspan
-       style="text-align:center;text-anchor:middle;fill:#008000;"
+       style="text-align:center;text-anchor:middle;fill:#000000;"
        id="tspan29318"
        y="4142.3623"
-       x="-648.47852"
+       x="-551.03711"
        sodipodi:role="line">1</tspan></text>
   <text
      xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="-348.47852"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+     x="-848.47852"
      y="4092.3623"
      id="text29320"
      sodipodi:linespacing="125%"
@@ -4391,18 +4255,18 @@
      inkscape:export-ydpi="87.300003"><tspan
        sodipodi:role="line"
        id="tspan29322"
-       x="-348.47852"
+       x="-848.47852"
        y="4092.3623"
-       style="text-align:center;text-anchor:middle">0-2</tspan><tspan
+       style="text-align:center;text-anchor:middle;fill:#000000;">0-2</tspan><tspan
        sodipodi:role="line"
-       x="-348.47852"
+       x="-848.47852"
        y="4142.3623"
        id="tspan29324"
-       style="text-align:center;text-anchor:middle">20</tspan></text>
+       style="text-align:center;text-anchor:middle;fill:#000000;">20</tspan></text>
   <text
      xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
-     x="-548.47852"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+     x="-649.2793"
      y="4092.3623"
      id="text29326"
      sodipodi:linespacing="125%"
@@ -4411,44 +4275,90 @@
      inkscape:export-ydpi="87.300003"><tspan
        sodipodi:role="line"
        id="tspan29328"
-       x="-548.47852"
+       x="-649.2793"
        y="4092.3623"
-       style="text-align:center;text-anchor:middle;fill:#ff0000;">0-3</tspan><tspan
+       style="text-align:center;text-anchor:middle;fill:#000000;">0-3</tspan><tspan
        sodipodi:role="line"
-       x="-548.47852"
+       x="-649.2793"
        y="4142.3623"
        id="tspan29330"
-       style="text-align:center;text-anchor:middle;fill:#ff0000;">10</tspan></text>
+       style="text-align:center;text-anchor:middle;fill:#000000;">10</tspan></text>
   <text
      sodipodi:linespacing="125%"
      id="text29332"
      y="4092.3623"
-     x="-448.47852"
-     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="-749.57227"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
      xml:space="preserve"
      inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"
      inkscape:export-xdpi="87.300003"
      inkscape:export-ydpi="87.300003"><tspan
-       style="text-align:center;text-anchor:middle"
+       style="text-align:center;text-anchor:middle;fill:#000000;"
        y="4092.3623"
-       x="-448.47852"
+       x="-749.57227"
        id="tspan29334"
        sodipodi:role="line">2-3</tspan><tspan
-       style="text-align:center;text-anchor:middle"
+       style="text-align:center;text-anchor:middle;fill:#000000;"
        id="tspan29336"
        y="4142.3623"
-       x="-448.47852"
+       x="-749.57227"
        sodipodi:role="line">15</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="-820"
-     y="4200.3623"
+     x="-826"
+     y="4196.3623"
      id="text29506"
      sodipodi:linespacing="125%"><tspan
        sodipodi:role="line"
        id="tspan29508"
-       x="-820"
-       y="4200.3623"
-       style="fill:#ff0000">Se formo un ciclo!</tspan></text>
+       x="-826"
+       y="4196.3623"
+       style="fill:#2a7fff">Ya formé un árbol</tspan></text>
+  <circle
+     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"
+     r="50"
+     cy="4253.3623"
+     cx="-349"
+     id="circle3963"
+     style="fill:#afafff;fill-opacity:1;stroke:#0000ff;stroke-width:4.07668734;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     inkscape:export-xdpi="87.300003"
+     inkscape:export-ydpi="87.300003" />
+  <circle
+     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"
+     r="50"
+     cy="4553.3623"
+     cx="-349"
+     id="circle3965"
+     style="fill:#afafff;fill-opacity:1;stroke:#0000ff;stroke-width:4.07668734;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     inkscape:export-xdpi="87.300003"
+     inkscape:export-ydpi="87.300003" />
+  <text
+     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"
+     sodipodi:linespacing="125%"
+     id="text3967"
+     y="4584.1514"
+     x="-376.57709"
+     style="font-style:normal;font-weight:normal;font-size:85.89802551px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     xml:space="preserve"
+     inkscape:export-xdpi="87.300003"
+     inkscape:export-ydpi="87.300003"><tspan
+       y="4584.1514"
+       x="-376.57709"
+       id="tspan3969"
+       sodipodi:role="line">2</tspan></text>
+  <text
+     inkscape:export-filename="/Users/chcuneo/Facu/Algo3/TP2/docs/images/ej3/worstcase/03.png"
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:85.89802551px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="-376.57709"
+     y="4284.1514"
+     id="text3971"
+     sodipodi:linespacing="125%"
+     inkscape:export-xdpi="87.300003"
+     inkscape:export-ydpi="87.300003"><tspan
+       sodipodi:role="line"
+       id="tspan3973"
+       x="-376.57709"
+       y="4284.1514">5</tspan></text>
 </svg>

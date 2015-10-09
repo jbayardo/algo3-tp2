@@ -18,7 +18,7 @@
 
 \usepackage{algorithm}
 \usepackage{algpseudocode}
-\usepackage{listings}
+\usepackage{listingsutf8}
 
 \usepackage{float}
 \floatplacement{figure}{h!}
@@ -75,6 +75,31 @@
 \section{Problema 1}
 
 \subsection{Resolución y correctitud}
+
+\begin{algorithm}[h!]
+\caption{Algoritmo de programación dinámica bottom up para el ejercicio 1. $n$ es la cantidad de pisos.\label{alg:ex1}}
+
+\begin{algorithmic}[h!]
+\Procedure{maximizePath}{floors: int, adyacencia: matriz de adyacencia del grafo}
+\State best $\gets [0] * floors$ \Comment $O(n)$
+\State reachable $\gets [false] * floors$ \Comment $O(n)$
+\State reachable[0] $\gets true$ \Comment $O(1)$
+\For{i in 0...floors - 1} \Comment $O(n^2)$
+    \If{!reachable[i]} \Comment $O(1)$
+        \State continue \Comment $O(1)$
+    \EndIf
+    
+    \For{j in i...floors} \Comment $O(n)$
+        \If{adyacencia[i][j]} \Comment $O(1)$
+            \State best[j] $\gets$ max(best[j], best[i] + 1) \Comment $O(1)$
+            \State reachable[j] $\gets$ true \Comment $O(1)$
+        \EndIf    
+    \EndFor
+\EndFor
+\State return best[floors-1] \Comment $O(1)$
+\EndProcedure\\
+\end{algorithmic}
+\end{algorithm}
 
 Para la resolución de este ejercicio, nos basamos en la metodología clásica para resolver problemas de programación dinámica. Para facilitar la terminología, de aquí en adelante nos referiremos a los pisos como nodos y a los portales como aristas, ya que es la forma más natural de modelar el problema utilizando digrafos. Primero, nótese que la condición de que los portales sólo pueden conectar hacia pisos más altos nos permite tomar un orden a los nodos, donde ponemos uno antes del otro cuando el número de piso es más bajo. Observemos, además, que este orden tiene una propiedad particular: todas las aristas van de un nodo más chico hacia uno más alto.
 
@@ -134,38 +159,13 @@ Luego, siendo $i > 0$, supongamos que el lema vale para todo $0 \leq k < i$, est
 
 Finalmente, dado que el último nodo es alcanzable por definición del problema, por los lemas \textbf{1.0.2, 1.0.3}, sabemos que al retornar $best[floors-1]$ estamos devolviendo la longitud de un camino máximo del primer nodo al último.
 
-\begin{algorithm}[h!]
-\caption{Algoritmo de programación dinámica bottom up para el ejercicio 1. $n$ es la cantidad de pisos.\label{alg:ex1}}
-
-\begin{algorithmic}[h!]
-\Procedure{maximizePath}{floors: int, adyacencia: matriz de adyacencia del grafo}
-\State best $\gets [0] * floors$ \Comment $O(n)$
-\State reachable $\gets [false] * floors$ \Comment $O(n)$
-\State reachable[0] $\gets true$ \Comment $O(1)$
-\For{i in 0...floors - 1} \Comment $O(n^2)$
-    \If{!reachable[i]} \Comment $O(1)$
-        \State continue \Comment $O(1)$
-    \EndIf
-    
-    \For{j in i...floors} \Comment $O(n)$
-        \If{adyacencia[i][j]} \Comment $O(1)$
-            \State best[j] $\gets$ max(best[j], best[i] + 1) \Comment $O(1)$
-            \State reachable[j] $\gets$ true \Comment $O(1)$
-        \EndIf    
-    \EndFor
-\EndFor
-\State return best[floors-1] \Comment $O(1)$
-\EndProcedure\\
-\end{algorithmic}
-\end{algorithm}
-
 \subsection{Complejidad y experimentación}
 
 Como el algoritmo descripto es el único utilizado en la resolución del problema, y como pueden apreciarse las complejidades de las operaciones en el pseudocódigo del algoritmo \ref{alg:ex1}, lo único que queda por analizar son los dos ciclos que contiene y determinar los mejores y peores casos.
 
 Se puede ver que el algoritmo contiene un ciclo principal, que siempre realiza $n$ iteraciones; dentro de él se tiene un condicional y un ciclo interno, y éste último se ejecutará en caso de no cumplirse la guarda del condicional previo. Dado que el ciclo principal se ejecuta siempre $n$ veces, centraremos el análisis en el ciclo secundario, veremos en qué casos se realiza y cómo afecta la complejidad en cada caso.
 
-En peor caso, el ciclo secundario toma $n$ iteraciones y se realiza para cada iteración del ciclo principal. Esto es sucede cuando cada piso está conectado a todos los pisos más altos que él, porque para cada iteración del ciclo principal la guarda del condicional no se cumple (dado que el primer piso siempre va a poder alcanzar al piso actual), con lo cuál se ejecuta el ciclo secundario. Éste itera desde el próximo piso al actual hasta el último piso, lo cuál nos permite acotar por $n$ cantidad de iteraciones y dejando así la complejidad en peor caso como $O(n^2)$.
+En peor caso, el ciclo secundario toma $n$ iteraciones y se realiza para cada iteración del ciclo principal. Esto sucede cuando cada piso está conectado a todos los pisos más altos que él, porque para cada iteración del ciclo principal la guarda del condicional no se cumple (dado que el primer piso siempre va a poder alcanzar al piso actual), con lo cuál se ejecuta el ciclo secundario. Éste itera desde el próximo piso al actual hasta el último piso, lo cuál nos permite acotar por $n$ cantidad de iteraciones y dejando así la complejidad en peor caso como $O(n^2)$.
 
 \begin{figure}
     \centering
@@ -203,43 +203,25 @@ Por otro lado, el mejor caso debería minimizar la cantidad de ejecuciones del c
 
 \pagebreak
 
+Para generar casos aleatorios, primero aseg
+
 En la práctica, los experimentos realizados nos permitieron comprobar que efectivamente la complejidad es como suponíamos. La figura \ref{grf:ex1} muestra los resultados. 
 Observemos que en ambos casos, dividiendo el tiempo de ejecución por su complejidad acorde al tamaño del problema en esa instancia, se termina convergiendo hacia constantes como era de esperarse.
 Las grandes variaciones para las instancias pequeñas, se debe a que al ser el tamaño del problema tan pequeño, factores físicos como estado de caché del procesador y carga del sistema operativo pasan a ser mucho más influyentes que la complejidad de la solución en sí, por eso las variaciones.
 
 \begin{figure}
 \centering
-\includegraphics[width=10cm]{ex1}
+\includegraphics[width=12cm]{ex1}
 \caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas. \label{grf:ex1}}
 \end{figure}
 
+\vspace{2cm}
 \pagebreak
+\newpage
 
 \section{Problema 2}
-
 \subsection{Resolución y correctitud}
-
-A priori, leer el enunciado del problema deja claro que la solución debe involucrar tomar el camino mínimo que conecte a la posición inicial con la posición final (el aula). El primer modelo al que llegamos involucraba tener un nodo por cada posición que tuviese un portal, la posición inicial, y la posición final, y conectar cada uno de estos nodos con los otros que estén en el mismo piso (tomando como peso la cantidad de segundos que tardaríamos en recorrer el trayecto) y con los nodos a los que un portal pueda llevarlo (poniéndole peso 2 a cada arista, que simboliza una vez más la cantidad de tiempo). Con este modelo, queda claro que el problema del enunciado se traduce en calcular el camino mínimo que une a la posición inicial con el aula de algoritmos. Sin embargo, un análisis rápido de complejidad temporal muestra que este modelado no admite una solución que esté cumpla el enunciado utilizando los algoritmos que vimos en la clase, y por lo tanto rápidamente lo descartamos.
-
-Encontramos, entonces, otro modelo posible, basado en transformar el modelo recién expuesto: crear un nodo por cada posición posible (de esta forma tendríamos $NL$ nodos) y conectar todos los que estén en el mismo piso con peso 1 en las aristas, simbolizando que tardamos 1 segundo en movernos de una posición a otra; además, si hay un portal que conecta una posición con otra, agregamos un ''nodo fantasma'' en el medio, y conectamos el nodo a los dos extremos del portal con peso 1. Esta idea del ''nodo fantasma'' es para lograr eliminar la noción de peso que tenían los ejes en el grafo original, obteniendo finalmente un grafo con peso 1 global para todas las aristas.\par
-
-De esta forma, tenemos exactamente $NL + P$ nodos (uno por posición y un ''nodo fantasma'' por portal) y un total de $N (L-1) + 2P$ aristas. Observemos que en este nuevo grafo, el hecho de tener pesos uniformes nos permite calcular el camino mínimo utilizando BFS como vimos en la teórica; dado que la complejidad temporal de BFS es $O(m + n)$, tenemos que en particular para este grafo se convierte en $O(NL + P + N (L-1) + 2P) = O(NL + P)$, y por lo tanto estaríamos cumpliendo con la complejidad pedida por el enunciado.
-
-\begin{figure}
-    \centering
-    
-    \begin{tabular}{ccc}
-        \subfloat{\includegraphics[width=4cm]{images/ej2/example_normal.png}} &
-        \subfloat{\includegraphics[width=4cm]{images/ej2/example_expanded.png}}
-    \end{tabular}
-    
-    \caption{A la izquierda podemos ver el grafo que modela el problema mas intuitivamente ($G$) y a la derecha el grafo ($G'$) transformado al modelo propuesto sin pesos (los ''nodos fantasma'' se pueden ver en color gris)
-    Las aristas rojas representan a los portales, las negras al costo de caminar entre cada posición dentro de un piso\label{grf:ex2-example}}
-\end{figure}
-    
-
-Observemos, además, que asumiendo que tenemos la cantidad de nodos que precisamos crear, tomar una representación utilizando listas de adyacencia nos permite que generar el grafo a partir de los datos tenga un costo de $O(NL)$ para crear todos los nodos correspondientes a las posiciones y sus conexiones, y $O(P)$ para agregar los nodos fantasma de los portales, junto con sus aristas. Es decir, tendríamos que en conjunto todo el algoritmo correría en $O(NL + P)$.
-
+.
 \begin{algorithm}[h!]
 \caption{Algoritmo de Breadth First Search. $n$ es la cantidad de vértices del grafo, $m$ la cantidad de aristas. \label{alg:bfs}}
 
@@ -270,6 +252,28 @@ Observemos, además, que asumiendo que tenemos la cantidad de nodos que precisam
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
+
+\vspace{10em}
+A priori, leer el enunciado deja claro que la solución debe involucrar tomar el camino mínimo que conecte a la posición inicial con la posición final (el aula). El primer modelo al que llegamos involucraba tener un nodo por cada posición que tuviese un portal, la posición inicial, y la posición final, y conectar cada uno de estos nodos con los otros que estén en el mismo piso (tomando como peso la cantidad de segundos que tardaríamos en recorrer el trayecto) y con los nodos a los que un portal pueda llevarlo (poniéndole peso 2 a cada arista, que simboliza una vez más la cantidad de tiempo). Con este modelo, queda claro que el problema del enunciado se traduce en calcular el camino mínimo que une a la posición inicial con el aula de algoritmos. Sin embargo, un análisis rápido de complejidad temporal muestra que este modelado no admite una solución que esté cumpla el enunciado utilizando los algoritmos que vimos en la clase, y por lo tanto rápidamente lo descartamos.
+
+Encontramos, entonces, otro modelo posible, basado en transformar el modelo recién expuesto: crear un nodo por cada posición posible (de esta forma tendríamos $NL$ nodos) y conectar todos los que estén en el mismo piso con peso 1 en las aristas, simbolizando que tardamos 1 segundo en movernos de una posición a otra; además, si hay un portal que conecta una posición con otra, agregamos un ''nodo fantasma'' en el medio, y conectamos el nodo a los dos extremos del portal con peso 1. Esta idea del ''nodo fantasma'' es para lograr eliminar la noción de peso que tenían los ejes en el grafo original, obteniendo finalmente un grafo con peso 1 global para todas las aristas.\par
+
+De esta forma, tenemos exactamente $NL + P$ nodos (uno por posición y un ''nodo fantasma'' por portal) y un total de $N (L-1) + 2P$ aristas. Observemos que en este nuevo grafo, el hecho de tener pesos uniformes nos permite calcular el camino mínimo utilizando BFS como vimos en la teórica; dado que la complejidad temporal de BFS es $O(m + n)$, tenemos que en particular para este grafo se convierte en $O(NL + P + N (L-1) + 2P) = O(NL + P)$, y por lo tanto estaríamos cumpliendo con la complejidad pedida por el enunciado.
+
+\begin{figure}
+    \centering
+    
+    \begin{tabular}{ccc}
+        \subfloat{\includegraphics[width=4cm]{images/ej2/example_normal.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/example_expanded.png}}
+    \end{tabular}
+    
+    \caption{A la izquierda podemos ver el grafo que modela el problema mas intuitivamente ($G$) y a la derecha el grafo ($G'$) transformado al modelo propuesto sin pesos (los ''nodos fantasma'' se pueden ver en color gris)
+    Las aristas rojas representan a los portales, las negras al costo de caminar entre cada posición dentro de un piso\label{grf:ex2-example}}
+\end{figure}
+    
+
+Observemos, además, que asumiendo que tenemos la cantidad de nodos que precisamos crear, tomar una representación utilizando listas de adyacencia nos permite que generar el grafo a partir de los datos tenga un costo de $O(NL)$ para crear todos los nodos correspondientes a las posiciones y sus conexiones, y $O(P)$ para agregar los nodos fantasma de los portales, junto con sus aristas. Es decir, tendríamos que en conjunto todo el algoritmo correría en $O(NL + P)$.
 
 Dicho más formalmente, la transformación que realizamos es dada una arista $e = (u, v)$ con peso $p(e)$, la reemplazamos por nodos $n_1, ..., n_{p(e)-1}$ con aristas $(n_i, n_{i+1})$ donde $i \in {1, ..., p(e) - 2}$ y dos aristas $(u, n_1), (n_{p(e)-1}, v)$ que nos permiten conectar los nuevos nodos a las posiciones. Además, agregamos nodos por cada posición y los conectamos con sus posiciones vecinas. De aquí en adelante, llamaremos $G = (V, E)$ al grafo inicial, y $G' = (V', E')$ al grafo transformado. Supongamos entonces que un camino en $G$ pasa por una arista $e \in E$ con peso $p(e)$, entonces transformar a las aristas como dijimos anteriormente nos dará un camino en $G'$. Es decir, para cada camino en $G$ podemos obtener un camino en $G'$; aunque la vuelta no necesariamente vale, dado que un camino que pase por entre medio de los nodos agregados no tiene su correspondiente en $G$ (cabe destacar, cualquier camino que no tenga esta condición sí va a poder volver la transformación hacia atrás).
 
@@ -331,7 +335,7 @@ Ahora bien, si quisiéramos obtener el mejor caso, sería minimizando la cantida
     \caption{Ejemplo de una corrida de mejor caso para el ejercicio 2. El arreglo de arriba representa el arreglo de distances del algoritmo, y el de abajo la cola utilizada. \label{grf:ex2-best}}
 \end{figure}
 
-Por otro lado, veamos que en peor caso (Figura \ref{grf:ex2-worst-1} y \ref{grf:ex2-worst-2}), la mayor cantidad de iteraciones se da cuando tengamos que pasar por todos los nodos para encontrar el camino mínimo que llega al nodo 'fin' y además cada nodo tenga la mayor cantidad de vecinos (para así maximizar la cantidad de iteraciones del ciclo interno); la única excepción a esto es el anteúltimo piso, ya que aquí todos los nodos tendrán que estar conectados con el metro 0 del último piso -dado que de lo contrario, estarían más cerca de llegar al nodo 'fin'.\\
+Por otro lado, veamos que en peor caso (figuras \ref{grf:ex2-worst-1} y \ref{grf:ex2-worst-2}), la mayor cantidad de iteraciones se da cuando tengamos que pasar por todos los nodos para encontrar el camino mínimo que llega al nodo 'fin' y además cada nodo tenga la mayor cantidad de vecinos (para así maximizar la cantidad de iteraciones del ciclo interno); la única excepción a esto es el anteúltimo piso, ya que aquí todos los nodos tendrán que estar conectados con el metro 0 del último piso -dado que de lo contrario, estarían más cerca de llegar al nodo 'fin'.\\
 
 Notemos que al momento de buscar maximizar la cantidad de vecinos de un nodo $n$ en el piso $i$, es necesario que $n$ esté conectado con todos los nodos del piso $i+1$ pero con ninguno superior a dicho piso, porque si lo estuviera, el algoritmo estaría aproximándose más rápidamente al portal que comunica con el último piso, y terminaría antes. De esta forma se tiene que el último piso tendrá un solo portal (en el metro 0), el anteúltimo piso tendrá $L$ portales (que comunican con el metro 0 del último piso), y todos los anteriores tendrán $L^2$ portales (cada metro del $i$-ésimo piso con todos los metros del $i+1$-ésimo piso). Con lo cuál la cantidad de portales será: $P = 1+L+(N-2)L^2$. \\
 
@@ -350,6 +354,7 @@ Notemos que al momento de buscar maximizar la cantidad de vecinos de un nodo $n$
     
     \caption{Ejemplo de una corrida de peor caso para el ejercicio 2. El arreglo de arriba representa el arreglo de distances del algoritmo, y el de abajo la cola utilizada.(Parte 1)\label{grf:ex2-worst-1}}
 \end{figure}
+
 \begin{figure}
     
     \centering
@@ -367,14 +372,15 @@ Notemos que al momento de buscar maximizar la cantidad de vecinos de un nodo $n$
     \caption{Ejemplo de una corrida de peor caso para el ejercicio 2. El arreglo de arriba representa el arreglo de distances del algoritmo, y el de abajo la cola utilizada.(Parte 2)\label{grf:ex2-worst-2}}
 \end{figure}
 
+Para la generación de los casos de prueba, decidimos tomar $L = N$ para simplificar la comprensión de los gráficos (de cualquier forma, mirar los gráficos por separado da lo esperado, pero es más complicado de expresar los resultados). Observemos en la figura \ref{grf:ex2} que tanto el mejor caso como el peor caso tienden a constantes, implicando que el crecimiento asintótico efectivamente es como esperábamos. Cabe destacar que, en particular para el peor caso, la función $NL + P = NL + 1+L+(N-2)L^2 \in O(L^3)$, pues $N = L$ implica que el último término es $O(L^3)$, y el primero es $O(L^2)$.
+
+Para el caso aleatorio, lo que se decidió hacer es generar un árbol que conecte cada piso con el siguiente hasta N para asegurar que exista solución. Luego se generan todas los pares de pisos posibles, se elige una cantidad aleatoria de estos pares, entre $(L-1)*(L-3)$ y $(L-1)*(L-2)$, y se generan nuevos portales usando este par de pisos y 2 posiciones aleatorias dentro de los pisos. Esto se hizo para que el grafo sea más denso y poder diferenciarse del mejor caso, y a su vez para que no sea tan denso como en el peor caso.
+
 \begin{figure}
 \centering
 \centerline{\includegraphics[width=10cm]{ex2}}
-\caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas. Nos vimos forzados a borrar algunos puntos en el peor case en un entorno del 15, ya que la computadora se colgó por otros programas y los tiempos resultaron ser outliers que distorsionaban demasiado el gráfico.\label{grf:ex2}}
+\caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas. \label{grf:ex2}}
 \end{figure}
-
-Para generar los casos de prueba, decidimos hacer L = N, y hacer crecer el tamaño del problema
-linealmente en L, por lo que el tamaño del edificio crece en L^2 para cada L. El mejor caso es un simple portal que conecta el nodo inicial con el nodo final. Para el peor caso, el caso de prueba generado es que para cada piso n, todos los nodos dentro de ese piso se conectan con todos los del siguiente, es decir, entre el piso n y el piso n+1, los portales forman un grafo bipartito completo (l, l). Debido a esto, la complejidad en el peor caso se vuelve P = L^3, ya que por 
 
 
 \pagebreak
@@ -471,6 +477,7 @@ Por otro lado, caracterizar el peor caso es más difícil: si bien es claro que 
 \end{figure}
 
 Como puede verse en la figura \ref{grf:ex3}, tenemos que ambos casos parecerían efectivamente estar en la complejidad deseada. Al igual que en los otros ejercicios, tenemos una variación muy amplia en la medición de tiempos al principio, pero terminan convergiendo a una constante, lo que demuestra que efectivamente la complejidad es como anunciamos anteriormente.
+Para generar los casos aleatorios para este ejercicio, se generaron todos los pares posibles de nodos del grafo, se desordenó esta lista, y luego se eligieron $M = 2 + ((N - 1)*(N - 2))/2$ pares de la lista para generar aristas con pesos aleatorios. Esta elección de M no es casualidad, ya que nos asegura que sin importar que pares elijamos, el grafo va a ser conexo, como se vió en uno de los ejercicios de la práctica.
 
 \begin{figure}
 \centering
@@ -482,19 +489,23 @@ Como puede verse en la figura \ref{grf:ex3}, tenemos que ambos casos parecerían
 
 \section{Código fuente}
 
+\lstset{inputencoding=utf8/latin1}
+\lstset{basicstyle=\footnotesize\ttfamily,breaklines=true}
+\lstset{framextopmargin=50pt,frame=bottomline}
+
 \subsection{Main}
-%\lstinputlisting[language=C++]{../src/main.cpp}
+\lstinputlisting[language=C++]{../src/main.cpp}
 
 \subsection{Ejercicio 1}
-%\lstinputlisting[language=C++]{../src/Exercise1.h}
-%\lstinputlisting[language=C++]{../src/Exercise1.cpp}
+\lstinputlisting[language=C++]{../src/Exercise1.h}
+\lstinputlisting[language=C++]{../src/Exercise1.cpp}
 
 \subsection{Ejercicio 2}
-%\lstinputlisting[language=C++]{../src/Exercise2.h}
-%\lstinputlisting[language=C++]{../src/Exercise2.cpp}
+\lstinputlisting[language=C++]{../src/Exercise2.h}
+\lstinputlisting[language=C++]{../src/Exercise2.cpp}
 
 \subsection{Ejercicio 3}
-%\lstinputlisting[language=C++]{../src/Exercise3.h}
-%\lstinputlisting[language=C++]{../src/Exercise3.cpp}
+\lstinputlisting[language=C++]{../src/Exercise3.h}
+\lstinputlisting[language=C++]{../src/Exercise3.cpp}
 
 \end{document}

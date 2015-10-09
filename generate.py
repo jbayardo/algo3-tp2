@@ -152,21 +152,21 @@ random_case[3] = random_case_3
 
 
 def generate_ex(ex, max_cases):
-    best_file = EX_DIR + EX_FILE_TEMPLATE % (ex, BEST)
+    # best_file = EX_DIR + EX_FILE_TEMPLATE % (ex, BEST)
     random_file = EX_DIR + EX_FILE_TEMPLATE % (ex, RANDOM)
-    worst_file = EX_DIR + EX_FILE_TEMPLATE % (ex, WORST)
+    # worst_file = EX_DIR + EX_FILE_TEMPLATE % (ex, WORST)
 
-    best_output = []
+    # best_output = []
     random_output = []
-    worst_output = []
+    # worst_output = []
 
-    best_output.append(best_case[ex](max_cases))
+    # best_output.append(best_case[ex](max_cases))
     random_output.append(random_case[ex](max_cases))
-    worst_output.append(worst_case[ex](max_cases))
+    # worst_output.append(worst_case[ex](max_cases))
 
-    write_ex_file(best_file, "\n".join(best_output))
-    write_ex_file(random_file, "\n".join(best_output))
-    write_ex_file(worst_file, "\n".join(worst_output))
+    # write_ex_file(best_file, "\n".join(best_output))
+    write_ex_file(random_file, "\n".join(random_file))
+    # write_ex_file(worst_file, "\n".join(worst_output))
 
 
 def write_ex_file(path, data):
@@ -179,6 +179,6 @@ if __name__ == '__main__':
     #     print "Numero Problema a generar"
     if not os.path.exists(EX_DIR):
         os.makedirs(EX_DIR)
-    #generate_ex(1, 100)
+    generate_ex(1, 100)
     generate_ex(2, 100)
-    #generate_ex(3, 100)
+    generate_ex(3, 100)

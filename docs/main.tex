@@ -78,6 +78,15 @@
 
 Para la resolución de este ejercicio, nos basamos en la metodología clásica para resolver problemas de programación dinámica. Para facilitar la terminología, de aquí en adelante nos referiremos a los pisos como nodos y a los portales como aristas, ya que es la forma más natural de modelar el problema utilizando digrafos. Primero, nótese que la condición de que los portales sólo pueden conectar hacia pisos más altos nos permite tomar un orden a los nodos, donde ponemos uno antes del otro cuando el número de piso es más bajo. Observemos, además, que este orden tiene una propiedad particular: todas las aristas van de un nodo más chico hacia uno más alto.
 
+\begin{figure}
+    \centering
+        \includegraphics[width=4cm]{images/ej1/example.png}
+
+    
+    \caption{Problema ejemplo: n = 3, tres portales: (0,1) (0,2) (1,3)
+    A la izquierda podemos ver el ''Pabellón'' representado, y a la derecha el grafo que lo representa.\label{grf:ex1-example}}
+\end{figure}
+
 Supongamos, entonces, que tenemos tan sólo 1 nodo. En este caso, el único camino posible es el camino vacío, y por lo tanto el mismo es el máximo. Por otro lado, si tenemos $n + 1$ nodos, y poseemos las longitudes $L_i$ de los caminos máximos que conectan al piso inicial con cada uno de los $n$ nodos anteriores, observemos que la longitud del camino máximo hasta el nodo $n + 1$ es exactamente:
 
 $$L_{n + 1} = max\{L_k + 1 : k \in \mathbb{N}, k \leq n, \text{el nodo } k \text{ está conectado con } n + 1 \text{ y existe camino desde } 0 \text{ hasta } k\}$$
@@ -169,10 +178,12 @@ En peor caso, el ciclo secundario toma $n$ iteraciones y se realiza para cada it
         
         \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/12.png}} &
         \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/13.png}} &
-        \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/23.png}}
+        \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/23.png}} &
+        \subfloat{\includegraphics[width=2cm]{images/ej1/worstcase/floors.png}}
     \end{tabular}
     
-    \caption{Ejemplo de una corrida de peor caso para el ejercicio 1. El arreglo de abajo representa a best en el pseudocódigo. No incluimos reachable por no parecernos necesario a la comprensión. \label{grf:ex1-worst}}
+    \caption{Ejemplo de una corrida de peor caso para el ejercicio 1. El arreglo de abajo representa a best en el pseudocódigo. No incluimos reachable por no parecernos necesario a la comprensión. 
+    La ultima imagen muestra el ''pabellón'' representado\label{grf:ex1-worst}}
 \end{figure}
 
 Por otro lado, el mejor caso debería minimizar la cantidad de ejecuciones del ciclo secundario. Notemos que esto sucede cuando el único portal existente es el que va del primer piso al último piso, ya que esto implicaría que todos los pisos intermedios no serían alcanzables, forzando la guarda del if a saltear la iteración. Cuando esto sucede, las únicas iteraciones que realizaremos serán la primera (porque el nodo inicial es alcanzable trivialmente) y la última (porque el nodo final es alcanzable a través del único portal que conecta al inicial con el mismo). En la primera iteración, la guarda del if no se cumple y el ciclo en cuestión itera desde el piso 1 hasta el último, tomando $O(n)$ pasos. Por último, en la última iteración no se cumple la guarda del condicional pero dado que se trata del último piso tampoco se cumple la guarda del ciclo y por eso éste no corre. Habiendo dicho esto, podemos ver que el ciclo principal toma $n$ iteraciones, y cada una tiene complejidad $O(1)$ excepto la primera que es $O(n)$, por ende este caso toma $O(n)$.
@@ -195,6 +206,8 @@ Por otro lado, el mejor caso debería minimizar la cantidad de ejecuciones del c
 \includegraphics[width=10cm]{ex1}
 \caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas. \label{grf:ex1}}
 \end{figure}
+
+\pagebreak
 
 En la práctica, los experimentos realizados nos permitieron comprobar que efectivamente la complejidad es como suponíamos. La figura \ref{grf:ex1} muestra los resultados. 
 Observemos que en ambos casos, dividiendo el tiempo de ejecución por su complejidad acorde al tamaño del problema en esa instancia, se termina convergiendo hacia constantes como era de esperarse.
@@ -221,7 +234,7 @@ De esta forma, tenemos exactamente $NL + P$ nodos (uno por posición y un ''nodo
     \end{tabular}
     
     \caption{A la izquierda podemos ver el grafo que modela el problema mas intuitivamente ($G$) y a la derecha el grafo ($G'$) transformado al modelo propuesto sin pesos (los ''nodos fantasma'' se pueden ver en color gris)
-    Las aristas rojas representan a los portales, las negras al costo de caminar entre cada posición dentro de un piso\label{grf:ex2-best}}
+    Las aristas rojas representan a los portales, las negras al costo de caminar entre cada posición dentro de un piso\label{grf:ex2-example}}
 \end{figure}
     
 
@@ -335,6 +348,8 @@ Notemos que al momento de buscar maximizar la cantidad de vecinos de un nodo $n$
     
     \caption{Ejemplo de una corrida de peor caso para el ejercicio 2. El arreglo de arriba representa el arreglo de distances del algoritmo, y el de abajo la cola utilizada. \label{grf:ex2-worst}}
 \end{figure}
+
+\pagebreak
 
 \begin{figure}
 \centering

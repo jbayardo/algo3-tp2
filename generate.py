@@ -70,13 +70,13 @@ def random_case_2(top):
             edge = "%d %d %d %d" % (floor, here, next, there)
             cases[(l, l)].add(edge)
         # agrego aristas random
-        for x in xrange(l):
-            for _ in xrange(randint(x + 1, l)):
-                here = randint(0, l)
-                there = randint(0, l)
-                next = randint(x+1, l)
-                edge = "%d %d %d %d" % (x, here, next, there)
-                cases[(l, l)].add(edge)
+        all_edges = list(combinations(xrange(l+1), 2))
+        shuffle(all_edges)
+        for (x, y) in all_edges[:randint((l-1)*(l-3), (l-1) * (l-2))]:
+            here = randint(0, l)
+            there = randint(0, l)
+            edge = "%d %d %d %d" % (x, here, y, there)
+            cases[(l, l)].add(edge)
 
     return "\n".join(["%d %d\n" % k + "; ".join(cases[k])
                       for k in sorted(cases.keys())])
@@ -151,21 +151,21 @@ random_case[3] = random_case_3
 
 
 def generate_ex(ex, max_cases):
-    best_file = EX_DIR + EX_FILE_TEMPLATE % (ex, BEST)
+    # best_file = EX_DIR + EX_FILE_TEMPLATE % (ex, BEST)
     random_file = EX_DIR + EX_FILE_TEMPLATE % (ex, RANDOM)
-    worst_file = EX_DIR + EX_FILE_TEMPLATE % (ex, WORST)
+    # worst_file = EX_DIR + EX_FILE_TEMPLATE % (ex, WORST)
 
     best_output = []
     random_output = []
     worst_output = []
 
-    best_output.append(best_case[ex](max_cases))
+    # best_output.append(best_case[ex](max_cases))
     random_output.append(random_case[ex](max_cases))
-    worst_output.append(worst_case[ex](max_cases))
+    # worst_output.append(worst_case[ex](max_cases))
 
-    write_ex_file(best_file, "\n".join(best_output))
+    # write_ex_file(best_file, "\n".join(best_output))
     write_ex_file(random_file, "\n".join(random_output))
-    write_ex_file(worst_file, "\n".join(worst_output))
+    # write_ex_file(worst_file, "\n".join(worst_output))
 
 
 def write_ex_file(path, data):
@@ -178,6 +178,6 @@ if __name__ == '__main__':
     #     print "Numero Problema a generar"
     if not os.path.exists(EX_DIR):
         os.makedirs(EX_DIR)
-    generate_ex(1, 100)
+    # generate_ex(1, 100)
     generate_ex(2, 100)
-    generate_ex(3, 100)
+    # generate_ex(3, 100)

@@ -74,8 +74,8 @@ def random_case_2(top):
             for _ in xrange(randint(x + 1, l)):
                 here = randint(0, l)
                 there = randint(0, l)
-                next = randint(floor+1, l)
-                edge = "%d %d %d %d" % (floor, here, next, there)
+                next = randint(x+1, l)
+                edge = "%d %d %d %d" % (x, here, next, there)
                 cases[(l, l)].add(edge)
 
     return "\n".join(["%d %d\n" % k + "; ".join(cases[k])

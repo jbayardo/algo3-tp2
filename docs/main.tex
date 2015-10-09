@@ -1,26 +1,36 @@
 \documentclass{article}
+
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
-\usepackage{graphicx}
-\usepackage{dirtytalk}
+
 \usepackage{caratula}
+\usepackage{tpalgo3}
+
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{dirtytalk}
 \usepackage{enumerate}
+
 \usepackage{amssymb}
-\usepackage{algorithm}
-\usepackage{algpseudocode}
+\usepackage{mathtools}
 \usepackage{amsmath}
 \usepackage{amsthm}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+
 \usepackage{float}
+\floatplacement{figure}{h!}
+
 \usepackage{geometry}
 \usepackage{fixltx2e}
 \usepackage{wrapfig}
 \usepackage{cite}
 \usepackage{dsfont}
-\usepackage{listings}
-\usepackage{float}
+
 \usepackage[space]{grffile}
-\usepackage{tpalgo3}
-\usepackage{mathtools}
+
 \geometry{
  a4paper,
  total={210mm,297mm},
@@ -61,90 +71,240 @@
 
 \pagebreak
 
-\section{Introducción}
 
 \section{Problema 1}
 
 \subsection{Resolución}
 
-Como se puede ver a continuación, el algoritmo recorre los pisos desde 0 a N, actualizando la longitud del camino desde 0 a v, $0 < v \geq N$, con el máximo entre su valor actual y el valor de un camino desde 0 hasta un vértice u, $0 < u < v$, $\exists$ (u, v), más 1.\\
+Para la resolución de este ejercicio, nos basamos en la metodología clásica para resolver problemas de programación dinámica. Para facilitar la terminología, de aquí en adelante nos referiremos a los pisos como nodos y a los portales como aristas, ya que es la forma más natural de modelar el problema utilizando digrafos. Primero, nótese que la condición de que los portales sólo pueden conectar hacia pisos más altos nos permite tomar un orden a los nodos, donde ponemos uno antes del otro cuando el número de piso es más bajo. Observemos, además, que este orden tiene una propiedad particular: todas las aristas van de un nodo más chico hacia uno más alto.
 
-%% TODO: ejemplo
+Supongamos, entonces, que tenemos tan sólo 1 nodo. En este caso, el único camino posible es el camino vacío, y por lo tanto el mismo es el máximo. Por otro lado, si tenemos $n + 1$ nodos, y poseemos las longitudes $L_i$ de los caminos máximos que conectan al piso inicial con cada uno de los $n$ nodos anteriores, observemos que la longitud del camino máximo hasta el nodo $n + 1$ es exactamente:
 
-\begin{algorithmic}
-\Procedure{maximizePath}{floors: int, adyacencia: matriz}
-\State best $\gets [0] * floors$
-\State reachable $\gets [false] * floors$
-\For{i in 0...floors} \Comment{O(n)}
-    \If{!reachable[i]}
-        \State continue
-    \EndIf
-    \For{j in i...floors} \Comment{O(n)}
-        \If{adyacencia[i][j-i]}
-            \State best[j] $\gets$ max(best[j], best[i] + 1)
-            \State reachable[j] $\gets$ true
-        \EndIf    
-    \EndFor
-\EndFor
-\State return best[floors-1]
-\EndProcedure\\
-\end{algorithmic}
+$$L_{n + 1} = max\{L_k + 1 : k \in \mathbb{N}, k \leq n, \text{el nodo } k \text{ está conectado con } n + 1 \text{ y existe camino desde } 0 \text{ hasta } k\}$$
 
-\subsection{Correctitud}
+Es decir, la longitud del camino máximo que conecta al nodo inicial con el nodo $n + 1$ es la longitud del camino máximo que conecta al nodo inicial con algún nodo anterior al mismo que esté conectado con $n + 1$, sumándole 1 (por la arista adicional que tendríamos que utilizar). Observemos que esto es posible únicamente por la condición del orden que mencionamos anteriormente, ya que en general la condición de optimalidad no se cumple para camino máximo, como vimos en la teórica.
 
-Veamos que nuestro algoritmo es correcto:
+\begin{lemma}
+El camino máximo en el sentido descripto cumple con el principio de optimalidad.
+\end{lemma}
+
+\begin{proof}
+Sea $C$ un camino de longitud máxima que une al nodo inicial con el nodo $n$, y supongamos que hay algún fragmento del camino que no es máximo, llamémosle a este fragmento $H$. Entonces, existe algún fragmento $J$ que une a los mismos nodos que $H$ y cumple que $|J| > |H| \iff |J| - |H| > 0$. Tomemos entonces al camino $C'$ como el que resulta de reemplazar en $C$ al fragmento $H$ por el fragmento $J$, entonces:
+
+$$|C'| = |C| - |H| + |J| > |C|$$
+
+Por lo tanto $C'$ es un camino con longitud mayor a $C$. Absurdo, pues $C$ era un camino de longitud máxima. Observemos que, sin decirlo, estamos utilizando muy fuertemente que no hay ciclos en el digrafo, ya que si los hubiese estaríamos intentando demostrar el principio de optimalidad para camino más largo sin pesos, donde no tenemos la noción de independencia entre soluciones que sí tenemos de esta forma.
+\end{proof}
+
+En términos de la programación, elegimos utilizar la versión iterativa bottom up del algoritmo, donde básicamente la idea es recorrer un nodo y actualizar los vecinos, de forma similar al recorrido de un bfs: dado un nodo $i$, recorremos todos los posibles nodos a los que pueda tener un portal $j \in \{i + 1, .., n\}$, y si estamos conectados intentamos actualizar la distancia máxima hasta ese nodo. De cualquier forma, cabe destacar que sólo los nodos $i$ que sean alcanzables desde el comienzo deberían ser actualizados, ya que si no podríamos actualizar de forma errónea la distancia. Si bien no está reflejado en el pseudocódigo del algoritmo \ref{alg:ex1}, en la práctica decidimos utilizar un jagged array para representar la matriz de adyacencia, ya que la condición de que los nodos sólo conecten hacia arriba nos determina automáticamente la orientación de las aristas, en el caso de haberlas, y por lo tanto no necesitamos toda la información, basta con sólo aquello que está arriba de la diagonal. Veamos, entonces, que el algoritmo es correcto:
 
 \begin{definition}
 Decimos que un piso es alcanzable cuando existe un camino desde el piso inicial hasta él.
 \end{definition}
 
 \begin{lemma}
-Los pisos no alcanzables no alteran el camino máximo desde 0 al piso n.
+Los nodos no alcanzables no alteran el camino máximo desde 0 a n.
 \end{lemma}
 
 \begin{proof}
-Supongamos que un piso no alcanzable sí altera el camino máximo entre los pisos 0 y n. Entonces, el piso no alcanzable debe pertenecer al mismo. Absurdo, pues si pertenece al camino máximo entonces es alcanzable a través del sub-camino que lo une con el piso 0.
+Supongamos que un nodo no alcanzable sí altera el camino máximo entre los nodos 0 y n. Entonces, el nodo no alcanzable debe pertenecer al mismo. Absurdo, pues si pertenece al camino máximo entonces es alcanzable a través del sub-camino que lo une con 0.
 \end{proof}
 
 \begin{lemma}
-Tras la $i$-ésima iteración del ciclo externo del algoritmo, si $i$ es alcanzable y $k$ es un vecino de $i$, $best[k]$ guarda la longitud de alguno de los caminos más largos que unen al piso $0$ con el piso $k$, y pasan por algún nodo alcanzable que es menor a $i$ en el orden de recorrido.
+Al comenzar la $i$-ésima iteración del ciclo externo, si el nodo $i$ es alcanzable, $best[i]$ tiene la longitud del camino más largo de $0$ a $i$.
 \end{lemma}
 
 \begin{proof}
-Por inducción en los $i$, cuando $i = 0$ observemos que no entramos en el primer if, pues el 0 es alcanzable con el camino vacío, y por lo tanto vamos a iterar a través de sus vecinos. Como $best[0] = 0$, pondremos a $best[k] = 1$, que es precisamente la longitud del camino que involucra tomar la única arista que une a $0$ con $k$. 
+Sea n la cantidad de pisos e $i$ el número de piso, tal que $0 \leq i < n$. \\
+Por inducción en $i$. \\
 
-Supongamos que vale cuando $i \leq n$, veamos que vale cuando $i = n + 1$. Si $i$ es alcanzable, vamos a entrar en el ciclo más interno. Observemos que el mismo va a iterar a través de todos los candidatos a vecinos de $i$, y el if va a verificar si efectivamente hay una arista conectando a $i$ con $k$. En el caso en que la haya, entonces hemos encontrado un camino que une al 0 con $k$ (que es el camino que une al 0 con $i$, adhiriéndole la arista que conecta a $i$ con $k$); sin embargo, este camino de longitud $best[i] + 1$ podría no ser el máximo, y por lo tanto debemos tomar $best[k] = max\{best[k], best[i] + 1\}$, que es lo que nos permite afirmar que la longitud es la mejor posible. Cabe destacar que, al estar iterando a través de todos los vecinos de $i$, estamos probando todos los caminos que llegan hasta cada uno de ellos y pasan por $i$.
+Cuando $i = 0$, al iniciar la primera iteración, $best[0] = 0$. Esto es lo esperable, dado que por definición: el camino que comienza en un nodo y termina en sí mismo tiene longitud 0. \\
+
+Luego, siendo $i > 0$, supongamos que el lema vale para todo $0 \leq k < i$, estando $k$ conectado con $i$. Esto significa que para todo nodo $k$, al comenzar la $k$-ésima iteración, el algoritmo llevaba guardado en $best[k]$ la longitud del camino máximo de $0$ a $k$ y luego del segundo ciclo los valores de todos los vecinos de $k$ fueron actualizados tomando el máximo entre el valor ya guardado y $best[k]+1$ (por utilizar la arista de $k$ a su vecino). Como dijimos que $i$ es vecino de $k$ y para cada $k$ estamos guardando en $best[i]$ el valor máximo entre el ya guardado y $best[k]+1$, en particular, al terminar de iterar por los $k$ nodos, obtuvimos el máximo entre todos los $best[k]+1$ en $best[i]$. Finalmente, podemos asegurar que ésta es la longitud máxima de $0$ a $i$ porque debe ser el máximo de todos los caminos que comienzan en 0 y llegan a él; y, por la condición de orden que mencionamos anteriormente en la demostración, todos estos caminos pasan únicamente por nodos inferiores a él y hemos recorrido todos.
 \end{proof}
 
-Finalmente, en último paso, $best[n-1]$ tiene exactamente la longitud del camino máximo que une al piso 0 con el piso $n$, y es precisamente lo que devolvemos en el algoritmo.
+Finalmente, dado que el último nodo es alcanzable por definición del problema, por los lemas \textbf{1.0.2, 1.0.3}, sabemos que al retornar $best[floors-1]$ estamos devolviendo la longitud de un camino máximo del primer nodo al último.
 
-\subsection{Complejidad}
+\begin{algorithm}[h!]
+\caption{Algoritmo de programación dinámica bottom up para el ejercicio 1. $n$ es la cantidad de pisos.\label{alg:ex1}}
 
-%% TODO: imagen del mejor y peor caso
-
-Para analizar la complejidad del algoritmo notemos que en peor caso todos los pisos están conectados entre sí (osea forman un grafo completo) haciendo que la complejidad se torne $O(n^2)$, con $n$ la cantidad de pisos. Esto es porque el primer ciclo recorre todos los pisos y por cada uno ejecuta el segundo ciclo, que recorre todos los pisos desde el actual hasta el último. Por otro lado, el mejor caso sucede cuando el único portal existente es el que va del 0 al $n$, la complejidad baja a ser $O(n)$, siendo n la cantidad de pisos: el primer condicional dentro del primer ciclo chequea si el piso es alcanzable, lo que sucede es que el ciclo interno sólo se ejecuta en la primera y en la última iteración del ciclo externo, porque el primer y el último piso son los únicos alcanzables. Analizando la complejidad total, basta con ver que la primera y la última iteración del ciclo externo cuestan $O(n)$, y las demás cuestan $O(1)$, con lo cuál la complejidad se reduce a $O(n)$.
+\begin{algorithmic}[h!]
+\Procedure{maximizePath}{floors: int, adyacencia: matriz de adyacencia del grafo}
+\State best $\gets [0] * floors$ \Comment $O(n)$
+\State reachable $\gets [false] * floors$ \Comment $O(n)$
+\State reachable[0] $\gets true$ \Comment $O(1)$
+\For{i in 0...floors - 1} \Comment $O(n^2)$
+    \If{!reachable[i]} \Comment $O(1)$
+        \State continue \Comment $O(1)$
+    \EndIf
+    
+    \For{j in i...floors} \Comment $O(n)$
+        \If{adyacencia[i][j]} \Comment $O(1)$
+            \State best[j] $\gets$ max(best[j], best[i] + 1) \Comment $O(1)$
+            \State reachable[j] $\gets$ true \Comment $O(1)$
+        \EndIf    
+    \EndFor
+\EndFor
+\State return best[floors-1] \Comment $O(1)$
+\EndProcedure\\
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Experimentación}
 
+Como el algoritmo descripto es el único utilizado en la resolución del problema, y como pueden apreciarse las complejidades de las operaciones en el pseudocódigo del algoritmo \ref{alg:ex1}, lo único que queda por analizar son los dos ciclos que contiene y determinar los mejores y peores casos.
+
+Se puede ver que el algoritmo contiene un ciclo principal, que siempre realiza $n$ iteraciones; dentro de él se tiene un condicional y un ciclo interno, y éste último se ejecutará en caso de no cumplirse la guarda del condicional previo. Dado que el ciclo principal se ejecuta siempre $n$ veces, centraremos el análisis en el ciclo secundario, veremos en qué casos se realiza y cómo afecta la complejidad en cada caso.
+
+En peor caso, el ciclo secundario toma $n$ iteraciones y se realiza para cada iteración del ciclo principal. Esto es sucede cuando cada piso está conectado a todos los pisos más altos que él, porque para cada iteración del ciclo principal la guarda del condicional no se cumple (dado que el primer piso siempre va a poder alcanzar al piso actual), con lo cuál se ejecuta el ciclo secundario. Éste itera desde el próximo piso al actual hasta el último piso, lo cuál nos permite acotar por $n$ cantidad de iteraciones y dejando así la complejidad en peor caso como $O(n^2)$.
+
+\begin{figure}
+    \centering
+    
+    \begin{tabular}{cccc}
+        \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/00.png}} &
+        \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/01.png}} &
+        \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/02.png}} &
+        \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/03.png}} \\
+        
+        \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/12.png}} &
+        \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/13.png}} &
+        \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/23.png}}
+    \end{tabular}
+    
+    \caption{Ejemplo de una corrida de peor caso para el ejercicio 1. El arreglo de abajo representa a best en el pseudocódigo. No incluimos reachable por no parecernos necesario a la comprensión. \label{grf:ex1-worst}}
+\end{figure}
+
+Por otro lado, el mejor caso debería minimizar la cantidad de ejecuciones del ciclo secundario. Notemos que esto sucede cuando el único portal existente es el que va del primer piso al último piso, ya que esto implicaría que todos los pisos intermedios no serían alcanzables, forzando la guarda del if a saltear la iteración. Cuando esto sucede, las únicas iteraciones que realizaremos serán la primera (porque el nodo inicial es alcanzable trivialmente) y la última (porque el nodo final es alcanzable a través del único portal que conecta al inicial con el mismo). En la primera iteración, la guarda del if no se cumple y el ciclo en cuestión itera desde el piso 1 hasta el último, tomando $O(n)$ pasos. Por último, en la última iteración no se cumple la guarda del condicional pero dado que se trata del último piso tampoco se cumple la guarda del ciclo y por eso éste no corre. Habiendo dicho esto, podemos ver que el ciclo principal toma $n$ iteraciones, y cada una tiene complejidad $O(1)$ excepto la primera que es $O(n)$, por ende este caso toma $O(n)$.
+
+\begin{figure}
+    \centering
+    
+    \begin{tabular}{cccc}
+        \subfloat{\includegraphics[width=3cm]{images/ej1/bestcase/00.png}} &
+        \subfloat{\includegraphics[width=3cm]{images/ej1/bestcase/01.png}} &
+        \subfloat{\includegraphics[width=3cm]{images/ej1/bestcase/10.png}} &
+        \subfloat{\includegraphics[width=3cm]{images/ej1/bestcase/20.png}}
+    \end{tabular}
+    
+    \caption{Ejemplo de una corrida de mejor caso para el ejercicio 1. El arreglo de abajo representa a best en el pseudocódigo. No incluimos reachable por no parecernos necesario a la comprensión. \label{grf:ex1-best}}
+\end{figure}
+
+En la práctica, los experimentos realizados nos permitieron comprobar que efectivamente la complejidad es como decíamos. La figura \ref{grf:ex1} muestra los resultados, y observemos que en ambos casos se termina convergiendo hacia constantes cuando dividimos por la complejidad esperada, con grandes variaciones para las instancias pequeñas, como era de esperarse. 
+
+\begin{figure}
+\centering
+\includegraphics[width=10cm]{ex1}
+\caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas. \label{grf:ex1}}
+\end{figure}
+
+\pagebreak
+
 \section{Problema 2}
 
-\subsection{Breve descripción del algoritmo}
+\subsection{Resolución}
 
-El problema es modelable utilizando grafos. Tomando cada posición posible de cada piso como un nodo, y dos posiciones se conectan entre ellas con peso 1 si son posiciones contiguas dentro de un mismo piso, o con peso 2 es una conexión hecha a través de un portal. Con este modelado uno podría buscar el camino mínimo entre el nodo que representa a la primera posición del primer piso y el que representa la ultima posición del ultimo piso.\par
-%TODO: Grafico grafo con pesos
-El problema es que ningún algoritmo de camino mínimo en grafos con peso pertenece a la complejidad requerida por el problema, por lo tanto se tuvo que pensar una manera diferente de modelarlo. \par
-Prestando atención a la complejidad - $O(NL + P)$ - uno puede ver que, siendo $N$ la cantidad de pisos, y $L$ la cantidad de posiciones por piso, con el punto de vista anterior esto es igual a la cantidad de aristas que hay en cada piso, formada por las conexiones entre posiciones contiguas de cada piso; luego, siendo $P$ la cantidad de portales, esto es igual a la cantidad de aristas que no entran en el conjunto anterior, es decir las aristas que representan la conexión de posiciones a través de un portal. De esto podemos concluir que la complejidad es $O(|E|)$ siendo $E$ el conjunto de aristas del grafo, y un algoritmo sobre grafos que sirve para calcular camino mínimo, entre un nodo y todos los demás, que pertenece a esa complejidad es el de $Breadth$-$first$-$search$, específicamente el camino simple de longitud mínima (siendo la longitud la cantidad de aristas que lo forman).\par
-El problema con el grafo que creamos a partir del problema es que contiene aristas con pesos distintos ($1$ o $2$), pero se puede solucionar fácilmente de la siguiente forma: para todas las aristas $(x,y)$ de con peso asociado igual a $2$, las borramos y luego insertamos un nuevo nodo $z$ y agregamos las aristas $(x, z)$ y $(z, y)$.\par
-%TODO: grafico grafo posta
-Con esto logramos transformar el "peso" de las aristas en longitud, ya que, en el nuevo grafo, viajar de $x$ a $y$ va a llevar $2$ pasos.\par\newline
-Luego utilizamos el algoritmo de $Breadth$-$first$-$search$, sin ninguna modificación, desde el nodo que representa a la primera posición del primer piso, y deteniendo el algoritmo cuando se llegue al nodo que representa a la ultima posición del ultimo piso, una vez aquí ya sabemos que tenemos el camino mas corto en longitud desde la entrada hasta el aula de Algo 3.
+A priori, leer el enunciado del problema deja claro que la solución debe involucrar tomar el camino mínimo que conecte a la posición inicial con la posición final (el aula). El primer modelo al que llegamos involucraba tener 1 nodo por cada posición que tuviese un portal, y conectar cada uno de estos nodos con los otros que estén en el mismo piso (tomando como peso la cantidad de segundos que tardaríamos en recorrer el trayecto) y con los nodos a los que un portal pueda llevarlo (poniéndole peso 2 a cada arista, que simboliza una vez más la cantidad de tiempo). Con este modelo, queda claro que el problema del enunciado se traduce en calcular el camino mínimo que une a la posición inicial con el aula de algoritmos. Sin embargo, un análisis rápido de complejidad temporal muestra que este modelado no permite una solución que esté cumpla el enunciado utilizando los algoritmos que vimos en la clase, y por lo tanto rápidamente lo descartamos.
+
+Encontramos, entonces, otro modelo posible: crear un nodo por cada posición posible (de esta forma tendríamos $NL$ nodos) y conectar todos los que estén en el mismo piso con peso 1 en las aristas, simbolizando que tardamos 1 segundo en movernos de una posición a otra; además, si hay un portal que conecta una posición con otra, agregamos un ''nodo fantasma'' en el medio, y conectamos el nodo a los dos extremos del portal con peso 1. Esta idea del ''nodo fantasma'' es para solucionar el p
+
+De esta forma, tenemos exactamente $NL + P$ nodos (uno por posición y uno por portal) y un total de $N (L-1) + 2P$ aristas. Observemos que en este nuevo grafo, el hecho de tener pesos uniformes nos permite calcular el camino mínimo utilizando BFS como vimos en la teórica; dado que la complejidad temporal de BFS es $O(m + n)$, tenemos que en particular para este grafo se convierte en $O(NL + P + N (L-1) + 2P) = O(NL + P)$, y por lo tanto estaríamos cumpliendo con la complejidad pedida por el enunciado.
+
+Observemos, además, que asumiendo que tenemos la cantidad de nodos que precisamos crear, tomar una representación utilizando listas de adyacencia nos permite que generar el grafo a partir de los datos tenga un costo de $O(NL)$ para crear todos los nodos correspondientes a las posiciones y sus conexiones, y $O(P)$ para agregar los nodos fantasma de los portales, junto con sus aristas. Es decir, tendríamos que en conjunto todo el algoritmo correría en $O(NL + P)$.
+
+\begin{algorithm}[h!]
+\caption{Algoritmo de Breadth First Search. $n$ es la cantidad de vértices del grafo, $m$ la cantidad de aristas. \label{alg:bfs}}
+
+\begin{algorithmic}[h!]
+\Procedure{BFS}{$G$ grafo, $t$ nodo final}
+\State queue $\gets$ Cola vacia \Comment $O(1)$
+\State distances $\gets$ Arreglo de tamaño $|G.V|$ inicializado a -1 \Comment $O(n)$
+\State parent $\gets$ Arreglo de tamaño $|G.V|$ inicializado a -1 \Comment $O(n)$
+
+\State distances[0] = 0 \Comment $O(1)$
+\State queue.push(0) \Comment $O(1)$
+
+\While{queue no esté vacia} \Comment $O(n + m)$
+    \State current $\gets$ queue.pop() \Comment $O(1)$
+    
+    \For{neighbor vecino de current} \Comment $O(dg(current))$
+        \If{distance[neighbor] $=$ -1} \Comment $O(1)$
+            \State distance[neighbor] $\gets$ distance[current] + 1 \Comment $O(1)$
+            \State parent[neighbor] $\gets$ current \Comment $O(1)$
+            \State queue.push(neighbor) \Comment $O(1)$
+        \EndIf
+        
+        \If{neighbor $=$ t} \Comment $O(1)$
+            \State return distances[neighbor] \Comment $O(1)$
+        \EndIf
+    \EndFor
+\EndWhile
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+% TODO: Grafico grafo con pesos
 
 \subsection{Correctitud}
-Para demostrar que nuestra solución es correcta hay que demostrar que el camino generado, 
+
+\begin{lemma}
+La transformación de grafos preserva caminos mínimos (es decir, encontrar un camino de distancia mínima en el grafo transformado es equivalente a encontrar un camino de longitud mínima en el grafo original)
+\end{lemma}
+
+\begin{proof}
+\end{proof}
 
 \subsection{Complejidad}
+Veamos que tras modelar nuestro grafo se obtiene que, independientemente de los portales dados, nuestro preprocesamiento genera un nodo por cada metro de cada piso del edificio, por lo que tenemos $N*L$ nodos y hasta este momento una complejidad de $O(NL)$. Luego veremos que por cada conexión entre portales, agregamos un nodo intermedio entre los dos extremos de la conexión, por lo que ahora tendremos $N*L+P$ nodos, con $P$ la cantidad de portales, formando así una complejidad de preprocesamiento de $O(NL+P)$. Notemos que nuestro algoritmo termina apenas se evalúa un nodo que tenga como vecino al último metro del último piso -de ahora en más, nodo 'fin'-, habiendo dicho esto, centraremos nuestro análisis en los portales dados porque es lo único que logrará variar la cantidad de iteraciones que tomará para llegar a dicho nodo. \\
 
-\subsection{Análisis}
+Ahora bien, si quisiéramos obtener el mejor caso, sería minimizando la cantidad de portales porque habría menos nodos a considerar a la hora de encolar, chequear sus vecinos e iterar a través de ellos, además de un preprocesado menos costoso. Dado que es condición necesaria del problema que exista un camino posible, necesitamos que exista al menos un camino del piso 0 al piso n, y para minimizar dicho camino de portales podemos considerar un portal único que vaya desde el metro 0 del piso 0 al nodo 'fin' (metro $L$ del nodo $N$). En este caso, en la primera iteración nuestro algoritmo encolará a los dos vecinos del metro 0 (el metro 1 y el portal intermediario que llevará al nodo 'fin'), luego al desencolar el portal intermediario iteraremos por su único vecino y dado que es el nodo 'fin' terminaremos la ejecución del algoritmo. Notemos que la resolución del camino mínimo propiamente dicha tomó tiempo constante en este caso, dado que no depende del largo de los pasillos $L$, ni de la cantidad de pisos $N$; sin embargo como contamos con el preprocesamiento antes mencionado, la complejidad se vuelve $O(NL+1)$, que es $O(NL)$. \\
+    
+\begin{figure}
+    \centering
+    
+    \begin{tabular}{ccc}
+        \subfloat{\includegraphics[width=4cm]{images/ej2/bestcase/00.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/bestcase/01.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/bestcase/09.png}} \\
+        \subfloat{\includegraphics[width=4cm]{images/ej2/bestcase/12.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/bestcase/98.png}}
+    \end{tabular}
+    
+    \caption{Ejemplo de una corrida de mejor caso para el ejercicio 2. El arreglo de arriba representa el arreglo de distances del algoritmo, y el de abajo la cola utilizada. \label{grf:ex2-best}}
+\end{figure}
+    
+Por otro lado, veamos que en peor caso, la mayor cantidad de iteraciones se da cuando tengamos que pasar por todos los nodos para encontrar el camino mínimo que llega al nodo 'fin' y además cada nodo tenga la mayor cantidad de vecinos (para así maximizar la cantidad de iteraciones del ciclo interno); la única excepción a esto es el anteúltimo piso, ya que aquí todos los nodos tendrán que estar conectados con el metro 0 del último piso -dado que de lo contrario, estarían más cerca de llegar al nodo 'fin'. \\
+Notemos que al momento de buscar maximizar la cantidad de vecinos de un nodo $n$ en el piso $i$, es necesario que $n$ esté conectado con todos los nodos del piso $i+1$ pero con ninguno superior a dicho piso, porque si lo estuviera, el algoritmo estaría aproximándose más rápidamente al portal que comunica con el último piso, y terminaría antes. De esta forma se tiene que el último piso tendrá un solo portal (en el metro 0), el anteúltimo piso tendrá $L$ portales (que comunican con el metro 0 del último piso), y todos los anteriores tendrán $L^2$ portales (cada metro del $i$-ésimo piso con todos los metros del $i+1$-ésimo piso). Con lo cuál la cantidad de portales será: $P = 1+L+(N-2)L^2$.
+
+\begin{figure}
+    \centering
+    
+    \begin{tabular}{ccc}
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/00-00.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/01-0167.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/02-189.png}} \\
+        
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/03-62.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/04-73.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/05-8.png}} \\
+        
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/06-9.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/07-210.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/08-311.png}} \\
+        
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/09-104.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/10-11.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/11-45.png}}
+    \end{tabular}
+    
+    \caption{Ejemplo de una corrida de peor caso para el ejercicio 2. El arreglo de arriba representa el arreglo de distances del algoritmo, y el de abajo la cola utilizada. \label{grf:ex2-worst}}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=10cm]{ex2}
+\caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas. Nos vimos forzados a borrar algunos puntos en el peor case en un entorno del 15, ya que la computadora se colgó por otros programas y los tiempos resultaron ser outliers que distorsionaban demasiado el gráfico.\label{grf:ex2}}
+\end{figure}
 
 \pagebreak
 
@@ -154,7 +314,7 @@ Para demostrar que nuestra solución es correcta hay que demostrar que el camino
 
 La resolución del tercer ejercicio depende básicamente de darse cuenta de las pistas que nos da el enunciado: dado el modelo del problema que nos determina el enunciado, el requerimiento de que no haya ciclos en el grafo de salida se traduce literalmente en que el mismo sea un árbol. Más todavía, el requerimiento de que la diferencia de la suma sea mínima se traduce literalmente en la idea intuitiva de buscar el árbol que más distancia cubra en total, minimizando la cantidad de metros de pasillos a cerrar (y por lo tanto minimizando el costo de cerrarlos).
 
-Como vimos en clase, el concepto análogo pero minimizando la distancia es el del árbol generador mínimo, y ya conocemos los algoritmos de Kruskal y de Prim para encontrarlo; por lo tanto, supusimos que probablemente sea posible modificar los algoritmos que ya conocíamos para resolver el nuevo problema de forma eficiente.
+Como vimos en clase, el concepto análogo pero minimizando la distancia es el del árbol generador mínimo, y ya conocemos los algoritmos de Kruskal y de Prim para encontrarlo; por lo tanto, supusimos que probablemente sea posible modificar los algoritmos que ya conocíamos para resolver el nuevo problema de árbol generador máximo de forma eficiente:
 
 \begin{lemma}
 Sea $G = (V, E)$ un grafo conexo con pesos en los ejes determinados por $p : E \to \mathbb{R}$. Un árbol generador mínimo con función de pesos $q : E \to \mathbb{R} / q(e) = -p(e)$ es un árbol generador máximo con función de pesos $p$.
@@ -174,10 +334,10 @@ Sean $T = (V, E_T)$ un árbol generador mínimo con respecto a $q$ y $R = (V, E_
 Es decir, negar los pesos de $T$ nos da un árbol generador máximo de $G$ con respecto a la función de pesos $p$.
 \end{proof}
 
-Observemos, entonces, que transformar pesos y correr Kruskal es una manera correcta de computar el árbol generador máximo de $G$, ya que Kruskal es correcto (por lo visto en la teórica) y el lema \ref{pr:agm} nos garantiza que hacer la traducción descripta es correcto. Además, realizar la traducción es una operación relativamente barata, en tanto que pasar por todas las aristas y cambiar los pesos es una operación que toma $\Theta(m)$, mientras que Kruskal toma $O(m log(m))$ si utilizamos un disjoint set como vimos en el taller, por lo que no nos cambia la complejidad asintótica:
+Observemos, entonces, que transformar pesos y correr Kruskal es una manera correcta de computar el árbol generador máximo de $G$, ya que Kruskal es correcto (por lo visto en la teórica) y el lema \ref{pr:agm} nos garantiza que hacer la traducción descripta es correcto. Además, realizar la traducción es una operación relativamente barata, en tanto que pasar por todas las aristas y cambiar los pesos es una operación que toma $\Theta(m)$, mientras que Kruskal toma $O(m log(m))$ si utilizamos un disjoint set como vimos en el taller, por lo que no nos cambia la complejidad asintótica. La versión del algoritmo de Kruskal utilizada está retratada en el algoritmo \ref{alg:kruskal}; el código para hacer la transformación de los pesos de las aristas no está incluido ya que se realiza en la etapa de entrada y salida (de cualquier forma, como dijimos antes, no cambiarían ni la complejidad asintótica ni la correctitud del algoritmo incluirlo en el mismo).
 
 \begin{algorithm}[h!]
-\caption{Algoritmo de Kruskal para árbol generador mínimo. \label{alg:kruskal}}
+\caption{Algoritmo de Kruskal para árbol generador mínimo. $m$ es la cantidad de aristas en el grafo. \label{alg:kruskal}}
 
 \begin{algorithmic}[h!]
 \Procedure{Kruskal}{$G$ grafo, $p$ función de pesos}
@@ -195,20 +355,58 @@ Observemos, entonces, que transformar pesos y correr Kruskal es una manera corre
 \State E $\gets E \cup \{($current.from$,$ current.to$)\}$ \Comment $O(1)$
 \EndIf
 \EndWhile
+\State return E
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
 
 \subsection{Experimentación}
 
-Observemos que la transformación de los pesos de las aristas siempre toma exactamente $\Theta(m)$, ya que no nos queda otra más que recorrer todas las aristas para cambiar los pesos. Observemos, además, que en el algoritmo de Kruskal el mejor caso es en el que sólo tenemos que hacer heapify y tomar exactamente $n - 1$ aristas para completar el grafo sin encontrarnos ciclos, permitiéndonos entrar siempre dentro del if. Queda claro que esto sólo sucedería si el grafo fuese acíclico y tuviese exactamente $n - 1$ aristas, es decir, fuese un árbol.
+Observemos que la transformación de los pesos de las aristas siempre toma exactamente $\Theta(m)$, ya que no nos queda otra más que recorrer todas las aristas para cambiar los pesos. Observemos, además, que en el algoritmo de Kruskal el mejor caso es en el que sólo tenemos que hacer heapify y tomar exactamente $n - 1$ aristas para completar el grafo sin encontrarnos ciclos, permitiéndonos entrar siempre dentro del if. Queda claro que esto sólo sucedería si el grafo fuese acíclico y tuviese exactamente $n - 1$ aristas, es decir, fuese un árbol. En este caso, tendríamos que $m \in O(n)$, y por lo tanto la complejidad temporal sería de $O(n log(n))$.
 
-Por otro lado, caracterizar el peor caso es significativamente más difícil. Si bien es claro que el grafo debería ser denso (teniendo entonces que ya el pre-procesamiento tomaría $\Theta(n^2)$), lo ideal sería también forzar al algoritmo de Kruskal a tener que hacer pop para todas las aristas antes de poder terminar; sin embargo, no logramos encontrar una forma fácil de generar casos en los que esto ocurra, ya que básicamente el orden que utilice Kruskal depende de qué swaps haga la implementación de MIN-HEAPIFY (que asimismo depende ampliamente del orden en el cuál las aristas sean dadas en el input) y cuál termine siendo el orden final de las aristas, ambas cuestiones siendo muy difíciles de predecir.
+Por otro lado, caracterizar el peor caso es más difícil: si bien es claro que el grafo debería ser denso (teniendo entonces que ya el pre-procesamiento tomaría $\Theta(n^2)$), lo ideal sería también forzar al algoritmo de Kruskal a tener que hacer pop para todas las aristas antes de poder terminar. Observemos que el algoritmo va a hacer pop hasta que haya logrado completar un árbol, por lo que la condición fundamental para que esto suceda es que las aristas que le permitan completar un árbol sean las últimas en ser procesadas. Cabe destacar entonces que el pre-procesamiento lo que hace es dar vuelta el orden de recorrido de las aristas, por lo que las aristas que fuesen las primeras al ordenarlas en el grafo original van a ser las últimas en el grafo procesado; implicando que las aristas que para completar el árbol deberían ser las de menor peso del grafo. Finalmente, para generar un grafo de $n$ nodos con estas características lo único que debemos hacer es tomar $K_n$, asignar los pesos de cualquier forma (pero siempre mayores o iguales a un número $M > 1$), y luego tomar algún nodo arbitrario del grafo, y hacer que todas sus aristas tengan peso $M - 1$. Nótese, sin embargo, que jamás será posible popear exactamente todas las aristas, ya que al llegar a la primera de las que conectan al nodo, simplemente tomaremos a esa (y no va a haber una asignación de pesos particular que logre que esto cambie). En este caso, tendríamos que $m \in O(n^2)$, por lo que la complejidad temporal pasaría a ser $O(n^2 log(n))$.
+
+\begin{figure}
+    \centering
+    
+    \begin{tabular}{ccc}
+        \subfloat{\includegraphics[width=4cm]{images/ej3/worstcase/00.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej3/worstcase/01-sort.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej3/worstcase/02.png}} \\
+        \subfloat{\includegraphics[width=4cm]{images/ej3/worstcase/03.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej3/worstcase/04.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej3/worstcase/05.png}} \\
+        \subfloat{\includegraphics[width=4cm]{images/ej3/worstcase/06.png}}
+    \end{tabular}
+    
+    \caption{Ejemplo de una corrida de peor caso para el ejercicio 3. El arreglo de arriba representa el el vector interno de la cola de prioridad. \label{grf:ex3-worst}}
+\end{figure}
+
+Como puede verse en la figura \ref{grf:ex3}, tenemos que ambos casos parecerían efectivamente estar en la complejidad deseada. Al igual que en los otros ejercicios, tenemos una variación muy amplia en la medición de tiempos al principio, pero terminan convergiendo a una constante, lo que demuestra que efectivamente la complejidad es como anunciamos anteriormente.
+
+\begin{figure}
+\centering
+\includegraphics[width=10cm]{ex3}
+\caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas.\label{grf:ex3}}
+\end{figure}
 
 \pagebreak
 
 \section{Código fuente}
 
 \subsection{Main}
+%\lstinputlisting[language=C++]{../src/main.cpp}
+
+\subsection{Ejercicio 1}
+%\lstinputlisting[language=C++]{../src/Exercise1.h}
+%\lstinputlisting[language=C++]{../src/Exercise1.cpp}
+
+\subsection{Ejercicio 2}
+%\lstinputlisting[language=C++]{../src/Exercise2.h}
+%\lstinputlisting[language=C++]{../src/Exercise2.cpp}
+
+\subsection{Ejercicio 3}
+%\lstinputlisting[language=C++]{../src/Exercise3.h}
+%\lstinputlisting[language=C++]{../src/Exercise3.cpp}
 
 \end{document}

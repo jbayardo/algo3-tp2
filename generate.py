@@ -68,7 +68,7 @@ def random_case_2(top):
         # agrego aristas random
         all_edges = list(combinations(xrange(l), 2))
         shuffle(all_edges)
-        for (x, y) in all_edges[:randint((l-1)*(l), l**2)]:
+        for (x, y) in all_edges[:randint(((l-1)*(l-2))/2, ((l-1)*(l))/2)]:
             here = randint(0, l)
             there = randint(0, l)
             edge = "%d %d %d %d" % (x, here, y, there)
@@ -107,7 +107,7 @@ def best_case_3(top):
 def random_case_3(top, max_weight=100):
     cases = []
     for x in xrange(3, top + 1):
-        m = randint(2 + ((x - 1)*(x - 2))/2, x**2)
+        m = randint(2 + ((x - 1)*(x - 2))/2, (x*(x-1))/2)
         all_edges = list(combinations(xrange(x + 1), 2))
         shuffle(all_edges)
         edges = "; ".join(["%d %d %d" % (a, b, randint(3, max_weight))

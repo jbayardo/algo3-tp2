@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import os
 from collections import defaultdict
-from random import randint, shuffle
+from random import randint, shuffle, random
 from itertools import combinations
 
 EX_DIR = "experiments/"
@@ -26,16 +26,12 @@ def random_case_1(top_floor):
     cases = []
     for z in xrange(3, top_floor + 1):
         # Me aseguro que haya un camino
-        connect = "%d\n0 %d; " % (z, z)
-        data = set()
-        for x in xrange(1, z):
-            while len(data) < z:
-                a = randint(x, z)
-                b = randint(x+1, z)
-                while a >= b and "%d %d" % (a, b) not in data:
-                    a = randint(x, z)
-                    b = randint(x+1, z)
-                data.add("%d %d" % (a, b))
+        connect = "%d\n" % z
+        data = set(["0 %d" % z])
+        for x in xrange(0, z):
+            for _ in xrange((randint(1, z))):
+                if random() < 0.25:
+                    data.add("%d %d" % (x, randint(x+1, z)))
         cases.append(connect + "; ".join(data))
     return "\n".join(cases)
 
@@ -70,9 +66,9 @@ def random_case_2(top):
             edge = "%d %d %d %d" % (floor, here, next, there)
             cases[(l, l)].add(edge)
         # agrego aristas random
-        all_edges = list(combinations(xrange(l+1), 2))
+        all_edges = list(combinations(xrange(l), 2))
         shuffle(all_edges)
-        for (x, y) in all_edges[:randint((l-1)*(l-3), (l-1) * (l-2))]:
+        for (x, y) in all_edges[:randint((l-1)*(l), l**2)]:
             here = randint(0, l)
             there = randint(0, l)
             edge = "%d %d %d %d" % (x, here, y, there)
@@ -111,7 +107,7 @@ def best_case_3(top):
 def random_case_3(top, max_weight=100):
     cases = []
     for x in xrange(3, top + 1):
-        m = 2 + ((x - 1)*(x - 2))/2
+        m = randint(2 + ((x - 1)*(x - 2))/2, x**2)
         all_edges = list(combinations(xrange(x + 1), 2))
         shuffle(all_edges)
         edges = "; ".join(["%d %d %d" % (a, b, randint(3, max_weight))
@@ -178,6 +174,6 @@ if __name__ == '__main__':
     #     print "Numero Problema a generar"
     if not os.path.exists(EX_DIR):
         os.makedirs(EX_DIR)
-    # generate_ex(1, 100)
+    generate_ex(1, 100)
     generate_ex(2, 100)
-    # generate_ex(3, 100)
+    generate_ex(3, 100)

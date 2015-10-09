@@ -92,9 +92,8 @@ def generate_ex(ex, max_cases):
     best_output = []
     worst_output = []
 
-    for x in xrange(1, max_cases):
-        best_output.append(best_case[ex](x))
-        worst_output.append(worst_case[ex](x))
+    best_output.append(best_case[ex](max_cases))
+    worst_output.append(worst_case[ex](max_cases))
 
     write_ex_file(best_file, "\n".join(best_output))
     write_ex_file(worst_file, "\n".join(worst_output))

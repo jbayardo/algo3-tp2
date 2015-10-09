@@ -259,9 +259,46 @@ Veamos que tras modelar nuestro grafo se obtiene que, independientemente de los 
 
 Ahora bien, si quisiéramos obtener el mejor caso, sería minimizando la cantidad de portales porque habría menos nodos a considerar a la hora de encolar, chequear sus vecinos e iterar a través de ellos, además de un preprocesado menos costoso. Dado que es condición necesaria del problema que exista un camino posible, necesitamos que exista un camino del piso 0 al piso n, y para minimizar dicho camino de portales podemos considerar un portal único que vaya desde el metro 0 del piso 0 al metro L del piso n. En este caso, en la primera iteración nuestro algoritmo encolará a los dos vecinos del metro 0 (el metro 1 y el portal intermediario que llevará al destino), luego al desencolar el portal intermediario iteraremos por su único vecino y dado que es el nodo 'fin' terminaremos la ejecución del algoritmo. Notemos que la resolución del camino mínimo propiamente dicha tomó tiempo constante en este caso, dado que no depende del largo de los pasillos $L$, ni de la cantidad de pisos $N$; sin embargo como contamos con el preprocesamiento antes mencionado, la complejidad se torna $O(NL+1)$, que es $O(NL)$. \\
     
+\begin{figure}
+    \centering
+    
+    \begin{tabular}{ccc}
+        \subfloat{\includegraphics[width=4cm]{images/ej2/bestcase/00.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/bestcase/01.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/bestcase/09.png}} \\
+        \subfloat{\includegraphics[width=4cm]{images/ej2/bestcase/12.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/bestcase/98.png}}
+    \end{tabular}
+    
+    \caption{Ejemplo de una corrida de mejor caso para el ejercicio 2. El arreglo de arriba representa el arreglo de distances del algoritmo, y el de abajo la cola utilizada. \label{grf:ex2-best}}
+\end{figure}
+    
 Por otro lado, veamos que en peor caso, la mayor cantidad de iteraciones se da cuando tengamos que pasar por todos los nodos para encontrar el camino mínimo que llega al nodo 'fin' y además cada nodo tenga la mayor cantidad de vecinos (para así maximizar la cantidad de iteraciones del ciclo interno); la única excepción a esto es el anteúltimo piso, ya que aquí todos los nodos tendrán que estar conectados con el metro 0 del último piso -dado que de lo contrario, estarían más cerca de llegar al nodo 'fin'. \\
-Notemos que al momento de buscar maximizar la cantidad de vecinos de un nodo $n$ en el piso $i$, es necesario que $n$ esté conectado con todos los nodos del piso $i+1$ pero con ninguno superior a dicho piso, porque si lo estuviera, el algoritmo estaría aproximándose más rápidamente al portal que comunica con el último piso, y terminaría antes. De esta forma se tiene que el último piso tendrá un solo portal (en el metro 0), el anteúltimo piso tendrá $L$ portales (que comunican con el metro 0 del último piso), y todos los anteriores tendrán $L^2$ portales (cada metro del $i$-ésimo piso con todos los metros del $i+1$-ésimo piso).  
+Notemos que al momento de buscar maximizar la cantidad de vecinos de un nodo $n$ en el piso $i$, es necesario que $n$ esté conectado con todos los nodos del piso $i+1$ pero con ninguno superior a dicho piso, porque si lo estuviera, el algoritmo estaría aproximándose más rápidamente al portal que comunica con el último piso, y terminaría antes. De esta forma se tiene que el último piso tendrá un solo portal (en el metro 0), el anteúltimo piso tendrá $L$ portales (que comunican con el metro 0 del último piso), y todos los anteriores tendrán $L^2$ portales (cada metro del $i$-ésimo piso con todos los metros del $i+1$-ésimo piso). Con lo cuál la cantidad de portales será: $P = 1+L+(N-2)L^2$.
 
+\begin{figure}
+    \centering
+    
+    \begin{tabular}{ccc}
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/00-00.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/01-0167.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/02-189.png}} \\
+        
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/03-62.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/04-73.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/05-8.png}} \\
+        
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/06-9.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/07-210.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/08-311.png}} \\
+        
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/09-104.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/10-11.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/11-45.png}}
+    \end{tabular}
+    
+    \caption{Ejemplo de una corrida de peor caso para el ejercicio 2. El arreglo de arriba representa el arreglo de distances del algoritmo, y el de abajo la cola utilizada. \label{grf:ex2-worst}}
+\end{figure}
 
 \begin{figure}
 \centering

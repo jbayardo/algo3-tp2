@@ -7,6 +7,7 @@ from itertools import combinations
 EX_DIR = "experiments/"
 BEST = "best"
 WORST = "worst"
+RANDOM = "random"
 EX_FILE_TEMPLATE = "test_%d_complejidad_%s.in"
 
 ####################################
@@ -15,14 +16,38 @@ EX_FILE_TEMPLATE = "test_%d_complejidad_%s.in"
 
 
 def best_case_1(top_floor):
-    return str(top_floor) + "\n" + "0 " + str(top_floor)
+    cases = []
+    for z in xrange(1, top_floor + 1):
+        cases.append("%d\n0 %d" % (z, z))
+    return "\n".join(cases)
+
+
+def random_case_1(top_floor):
+    cases = []
+    for z in xrange(3, top_floor + 1):
+        # Me aseguro que haya un camino
+        connect = "%d\n0 %d; " % (z, z)
+        data = set()
+        for x in xrange(1, z):
+            while len(data) < z:
+                a = randint(x, z)
+                b = randint(x+1, z)
+                while a >= b and "%d %d" % (a, b) not in data:
+                    a = randint(x, z)
+                    b = randint(x+1, z)
+                data.add("%d %d" % (a, b))
+        cases.append(connect + "; ".join(data))
+    return "\n".join(cases)
 
 
 def worst_case_1(top_floor):
-    data = [str(n) + " " + str(x)
-            for n in xrange(top_floor + 1)
-            for x in xrange(n + 1, top_floor + 1)]
-    return str(top_floor) + "\n" + "; ".join(data)
+    cases = []
+    for z in xrange(1, top_floor+1):
+        data = ["%d %d" % (n, x)
+                for n in xrange(z + 1)
+                for x in xrange(n + 1, z + 1)]
+        cases.append("%d\n" % (z) + "; ".join(data))
+    return "\n".join(cases)
 
 
 ####################################
@@ -30,8 +55,12 @@ def worst_case_1(top_floor):
 ####################################
 
 def best_case_2(top):
-    return "\n".join(["%d %d\n0 0 %d %d" % (top, l, top, l)
+    return "\n".join(["%d %d\n0 0 %d %d" % (l, l, l, l)
                       for l in xrange(2, max(top + 1, 3))])
+
+
+def random_case_2():
+    pass
 
 
 def worst_case_2(top):
@@ -61,6 +90,10 @@ def best_case_3(top):
     return "\n".join(cases)
 
 
+def random_case_3():
+    pass
+
+
 def worst_case_3(top, max_weight=100):
     cases = []
     top = max(4, top + 1)
@@ -85,18 +118,27 @@ worst_case[1] = worst_case_1
 worst_case[2] = worst_case_2
 worst_case[3] = worst_case_3
 
+random_case = {}
+random_case[1] = random_case_1
+random_case[2] = random_case_2
+random_case[3] = random_case_3
+
 
 def generate_ex(ex, max_cases):
     best_file = EX_DIR + EX_FILE_TEMPLATE % (ex, BEST)
+    random_file = EX_DIR + EX_FILE_TEMPLATE % (ex, RANDOM)
     worst_file = EX_DIR + EX_FILE_TEMPLATE % (ex, WORST)
 
     best_output = []
+    random_output = []
     worst_output = []
 
     best_output.append(best_case[ex](max_cases))
+    random_output.append(random_case[ex](max_cases))
     worst_output.append(worst_case[ex](max_cases))
 
     write_ex_file(best_file, "\n".join(best_output))
+    write_ex_file(random_file, "\n".join(best_output))
     write_ex_file(worst_file, "\n".join(worst_output))
 
 

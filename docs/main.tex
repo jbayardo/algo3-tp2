@@ -179,7 +179,7 @@ En peor caso, el ciclo secundario toma $n$ iteraciones y se realiza para cada it
         \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/12.png}} &
         \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/13.png}} &
         \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/23.png}} &
-        \subfloat{\includegraphics[width=2cm]{images/ej1/worstcase/floors.png}}
+        \subfloat{\includegraphics[width=3cm]{images/ej1/worstcase/floors.png}}
     \end{tabular}
     
     \caption{Ejemplo de una corrida de peor caso para el ejercicio 1. El arreglo de abajo representa a best en el pseudocódigo. No incluimos reachable por no parecernos necesario a la comprensión. 
@@ -201,17 +201,17 @@ Por otro lado, el mejor caso debería minimizar la cantidad de ejecuciones del c
     \caption{Ejemplo de una corrida de mejor caso para el ejercicio 1. El arreglo de abajo representa a best en el pseudocódigo. No incluimos reachable por no parecernos necesario a la comprensión. \label{grf:ex1-best}}
 \end{figure}
 
-\begin{figure}
-\centering
-\includegraphics[width=10cm]{ex1}
-\caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas. \label{grf:ex1}}
-\end{figure}
-
 \pagebreak
 
 En la práctica, los experimentos realizados nos permitieron comprobar que efectivamente la complejidad es como suponíamos. La figura \ref{grf:ex1} muestra los resultados. 
 Observemos que en ambos casos, dividiendo el tiempo de ejecución por su complejidad acorde al tamaño del problema en esa instancia, se termina convergiendo hacia constantes como era de esperarse.
 Las grandes variaciones para las instancias pequeñas, se debe a que al ser el tamaño del problema tan pequeño, factores físicos como estado de caché del procesador y carga del sistema operativo pasan a ser mucho más influyentes que la complejidad de la solución en sí, por eso las variaciones.
+
+\begin{figure}
+\centering
+\includegraphics[width=10cm]{ex1}
+\caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas. \label{grf:ex1}}
+\end{figure}
 
 \pagebreak
 
@@ -297,7 +297,16 @@ Si $u, v$ son nodos en $G$, y encontramos un camino $C'$ que los une en $G'$, $C
 \end{lemma}
 
 \begin{proof}
-Supongamos que $C'$ no es recuperable. Entonces, no hay ningún camino en $G$ que se transforme en $C'$
+Por inducción en la longitud de $C'$. Si $|C'| = 0$, $u = v$ y el camino vacío es recuperable.
+Supongamos que vale para todo camino de longitud menor o igual a $r$, veamos que vale cuando $|C'| = r + 1$. Desde $u$, tenemos una arista $e$ que lo conecta con algún otro nodo $z$. Tenemos, entonces, varias posibilidades:
+
+\begin{enumerate}
+\item $z$ es un nodo que corresponde a un portal, en cuyo caso $z$ está conectado con algún otro nodo $w$ que está originalmente en $G$. Entonces, si tomamos el subcamino de $C'$ que comienza en $w$ y termina en $v$, por hipótesis inductiva es recuperable. Agregando, entonces, a las aristas que unen $u$ con $w$, tenemos un camino recuperable que une $u$ con $v$.
+
+\item $z$ es un nodo que corresponde a una posición que ya estaba en el grafo anterior, entonces el subcamino de $C'$ que une $z$ a $v$ es recuperable por hipótesis inductiva, y tan solo tenemos que agregar a la arista $e$, que también debe pertenecer al grafo $G$. 
+
+\item $z$ es un nodo que corresponde a una posición que no estaba en el grafo anterior, en cuyo caso tenemos una cadena de posiciones que nos debe llevar a la próxima posición que tenga un portal (por construcción del grafo), además, todas estas posiciones se corresponden con una única arista en el grafo original. Si tomamos entonces al próximo nodo en $G'$ que tenga un portal, el subcamino de $C'$ desde el mismo hasta $v$ es recuperable por hipótesis inductiva, y todos los nodos intermedios que unen a $v$ con el nodo del portal son reconstruibles por el proceso explicado, entonces el camino total es reconstruible.
+\end{enumerate}
 \end{proof}
 
 Cabe destacar, entonces, que estos lemas nos permiten afirmar que si encontramos un camino de longitud mínima en $G'$, recuperarlo a un camino de peso mínimo en $G$ es posible y, más todavía, la longitud del mismo es equivalente al peso del camino mínimo en $G'$. Entonces, podemos aplicar BFS para obtener el camino de longitud mínima en $G'$ y con eso conseguir el peso del camino mínimo en $G$, que era nuestro objetivo original.
@@ -306,7 +315,7 @@ Cabe destacar, entonces, que estos lemas nos permiten afirmar que si encontramos
 
 Veamos que tras modelar nuestro grafo se obtiene que, independientemente de los portales dados, nuestro preprocesamiento genera un nodo por cada metro de cada piso del edificio, por lo que tenemos $NL$ nodos y hasta este momento una complejidad de $O(NL)$. Luego veremos que por cada conexión entre portales, agregamos un nodo intermedio entre los dos extremos de la conexión, por lo que ahora tendremos $NL+P$ nodos, con $P$ la cantidad de portales, formando así una complejidad de preprocesamiento de $O(NL+P)$. Notemos que nuestro algoritmo termina apenas se evalúa un nodo que tenga como vecino al último metro del último piso -de ahora en más, nodo 'fin'-, habiendo dicho esto, centraremos nuestro análisis en los portales dados porque es lo único que logrará variar la cantidad de iteraciones que tomará para llegar a dicho nodo. \\
 
-Ahora bien, si quisiéramos obtener el mejor caso, sería minimizando la cantidad de portales porque habría menos nodos a considerar a la hora de encolar, chequear sus vecinos e iterar a través de ellos, además de un preprocesado menos costoso. Dado que es condición necesaria del problema que exista un camino posible, necesitamos que exista al menos un camino del piso 0 al piso n, y para minimizar dicho camino de portales podemos considerar un portal único que vaya desde el metro 0 del piso 0 al nodo 'fin' (metro $L$ del nodo $N$). En este caso, en la primera iteración nuestro algoritmo encolará a los dos vecinos del metro 0 (el metro 1 y el portal intermediario que llevará al nodo 'fin'), luego al desencolar el portal intermediario iteraremos por su único vecino y dado que es el nodo 'fin' terminaremos la ejecución del algoritmo. Notemos que la resolución del camino mínimo propiamente dicha tomó tiempo constante en este caso, dado que no depende del largo de los pasillos $L$, ni de la cantidad de pisos $N$; sin embargo como contamos con el preprocesamiento antes mencionado, la complejidad se vuelve $O(NL+1)$, que es $O(NL)$. \\
+Ahora bien, si quisiéramos obtener el mejor caso, sería minimizando la cantidad de portales porque habría menos nodos a considerar a la hora de encolar, chequear sus vecinos e iterar a través de ellos, además de un preprocesado menos costoso. Dado que es condición necesaria del problema que exista un camino posible, necesitamos que exista al menos un camino del piso 0 al piso n, y para minimizar dicho camino de portales podemos considerar un portal único que vaya desde el metro 0 del piso 0 al nodo 'fin' (metro $L$ del nodo $N$). En este caso (Figura \ref{grf:ex2-best}), en la primera iteración nuestro algoritmo encolará a los dos vecinos del metro 0 (el metro 1 y el portal intermediario que llevará al nodo 'fin'), luego al desencolar el portal intermediario iteraremos por su único vecino y dado que es el nodo 'fin' terminaremos la ejecución del algoritmo. Notemos que la resolución del camino mínimo propiamente dicha tomó tiempo constante en este caso, dado que no depende del largo de los pasillos $L$, ni de la cantidad de pisos $N$; sin embargo como contamos con el preprocesamiento antes mencionado, la complejidad se vuelve $O(NL+1)$, que es $O(NL)$. \\
     
 \begin{figure}
     \centering
@@ -321,7 +330,8 @@ Ahora bien, si quisiéramos obtener el mejor caso, sería minimizando la cantida
     
     \caption{Ejemplo de una corrida de mejor caso para el ejercicio 2. El arreglo de arriba representa el arreglo de distances del algoritmo, y el de abajo la cola utilizada. \label{grf:ex2-best}}
 \end{figure}
-Por otro lado, veamos que en peor caso, la mayor cantidad de iteraciones se da cuando tengamos que pasar por todos los nodos para encontrar el camino mínimo que llega al nodo 'fin' y además cada nodo tenga la mayor cantidad de vecinos (para así maximizar la cantidad de iteraciones del ciclo interno); la única excepción a esto es el anteúltimo piso, ya que aquí todos los nodos tendrán que estar conectados con el metro 0 del último piso -dado que de lo contrario, estarían más cerca de llegar al nodo 'fin'.\\
+
+Por otro lado, veamos que en peor caso (Figura \ref{grf:ex2-worst-1} y \ref{grf:ex2-worst-2}), la mayor cantidad de iteraciones se da cuando tengamos que pasar por todos los nodos para encontrar el camino mínimo que llega al nodo 'fin' y además cada nodo tenga la mayor cantidad de vecinos (para así maximizar la cantidad de iteraciones del ciclo interno); la única excepción a esto es el anteúltimo piso, ya que aquí todos los nodos tendrán que estar conectados con el metro 0 del último piso -dado que de lo contrario, estarían más cerca de llegar al nodo 'fin'.\\
 
 Notemos que al momento de buscar maximizar la cantidad de vecinos de un nodo $n$ en el piso $i$, es necesario que $n$ esté conectado con todos los nodos del piso $i+1$ pero con ninguno superior a dicho piso, porque si lo estuviera, el algoritmo estaría aproximándose más rápidamente al portal que comunica con el último piso, y terminaría antes. De esta forma se tiene que el último piso tendrá un solo portal (en el metro 0), el anteúltimo piso tendrá $L$ portales (que comunican con el metro 0 del último piso), y todos los anteriores tendrán $L^2$ portales (cada metro del $i$-ésimo piso con todos los metros del $i+1$-ésimo piso). Con lo cuál la cantidad de portales será: $P = 1+L+(N-2)L^2$. \\
 
@@ -336,7 +346,15 @@ Notemos que al momento de buscar maximizar la cantidad de vecinos de un nodo $n$
         \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/03-62.png}} &
         \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/04-73.png}} &
         \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/05-8.png}} \\
-        
+        \end{tabular}
+    
+    \caption{Ejemplo de una corrida de peor caso para el ejercicio 2. El arreglo de arriba representa el arreglo de distances del algoritmo, y el de abajo la cola utilizada.(Parte 1)\label{grf:ex2-worst-1}}
+\end{figure}
+\begin{figure}
+    
+    \centering
+    
+    \begin{tabular}{ccc}
         \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/06-9.png}} &
         \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/07-210.png}} &
         \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/08-311.png}} \\
@@ -346,18 +364,18 @@ Notemos que al momento de buscar maximizar la cantidad de vecinos de un nodo $n$
         \subfloat{\includegraphics[width=4cm]{images/ej2/worstcase/11-45.png}}
     \end{tabular}
     
-    \caption{Ejemplo de una corrida de peor caso para el ejercicio 2. El arreglo de arriba representa el arreglo de distances del algoritmo, y el de abajo la cola utilizada. \label{grf:ex2-worst}}
+    \caption{Ejemplo de una corrida de peor caso para el ejercicio 2. El arreglo de arriba representa el arreglo de distances del algoritmo, y el de abajo la cola utilizada.(Parte 2)\label{grf:ex2-worst-2}}
 \end{figure}
-
-\pagebreak
 
 \begin{figure}
 \centering
-\includegraphics[width=10cm]{ex2}
+\centerline{\includegraphics[width=10cm]{ex2}}
 \caption{El estadístico que tomamos es la media alfa podada de 100 corridas con $\alpha = 0.10$, que nos permite evitar algunos outliers. En ambos casos estamos graficando a las funciones sobre las complejidades esperadas. Nos vimos forzados a borrar algunos puntos en el peor case en un entorno del 15, ya que la computadora se colgó por otros programas y los tiempos resultaron ser outliers que distorsionaban demasiado el gráfico.\label{grf:ex2}}
 \end{figure}
 
-Cuando ejecutamos los casos de experimentación, aparecieron algunos casos outliers que tardaban considerablemente más tiempo de ejecución que los demás casos, pero al ver que todos ocurrían dentro de un pequeño intervalo de ejecución, recordamos que en ese momento la computadora se colgó, con lo cual concluimos que el timer que usamos utiliza el clock y éste seguía corriendo y por eso estos resultados consideraron el tiempo 'colgado' como tiempo de corrida. Luego, tras remover este tipo de outliers, pudimos constatar fielmente que los experimentos sugieren que nuestros cálculos de complejidad son correctos.
+Para generar los casos de prueba, decidimos hacer L = N, y hacer crecer el tamaño del problema
+linealmente en L, por lo que el tamaño del edificio crece en L^2 para cada L. El mejor caso es un simple portal que conecta el nodo inicial con el nodo final. Para el peor caso, el caso de prueba generado es que para cada piso n, todos los nodos dentro de ese piso se conectan con todos los del siguiente, es decir, entre el piso n y el piso n+1, los portales forman un grafo bipartito completo (l, l). Debido a esto, la complejidad en el peor caso se vuelve P = L^3, ya que por 
+
 
 \pagebreak
 

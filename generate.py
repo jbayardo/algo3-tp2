@@ -59,9 +59,27 @@ def best_case_2(top):
                       for l in xrange(2, max(top + 1, 3))])
 
 
-def random_case_2():
-    pass
+def random_case_2(top):
+    cases = defaultdict(set)
+    for l in xrange(2, max(top + 1, 3)):
+        # me aseguro que sea conexo y haya solucion
+        for floor in xrange(l):
+            here = randint(0, l)
+            there = randint(0, l)
+            next = floor + 1
+            edge = "%d %d %d %d" % (floor, here, next, there)
+            cases[(l, l)].add(edge)
+        # agrego aristas random
+        for x in xrange(l):
+            for _ in xrange(randint(x + 1, l)):
+                here = randint(0, l)
+                there = randint(0, l)
+                next = randint(floor+1, l)
+                edge = "%d %d %d %d" % (floor, here, next, there)
+                cases[(l, l)].add(edge)
 
+    return "\n".join(["%d %d\n" % k + "; ".join(cases[k])
+                      for k in sorted(cases.keys())])
 
 def worst_case_2(top):
     cases = defaultdict(list)

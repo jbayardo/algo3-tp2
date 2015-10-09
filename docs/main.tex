@@ -79,7 +79,7 @@ Para la resolución de este ejercicio, nos basamos en la metodología clásica p
 
 Supongamos, entonces, que tenemos tan sólo 1 nodo. En este caso, el único camino posible es el camino vacío, y por lo tanto el mismo es el máximo. Por otro lado, si tenemos $n + 1$ nodos, y poseemos las longitudes $L_i$ de los caminos máximos que conectan al piso inicial con cada uno de los $n$ nodos anteriores, observemos que la longitud del camino máximo hasta el nodo $n + 1$ es exactamente:
 
-$$L_{n + 1} = max\{L_k + 1 : k \in \mathbb{N}, k \leq n, \text{el nodo } k \text{ está conectado con } n + 1 \text{ y con } 0\}$$
+$$L_{n + 1} = max\{L_k + 1 : k \in \mathbb{N}, k \leq n, \text{el nodo } k \text{ está conectado con } n + 1 \text{ y existe camino desde } 0 \text{ hasta } k\}$$
 
 Es decir, la longitud del camino máximo que conecta al nodo inicial con el nodo $n + 1$ es la longitud del camino máximo que conecta al nodo inicial con algún nodo anterior al mismo que esté conectado con $n + 1$, sumándole 1 (por la arista adicional que tendríamos que utilizar). Observemos que esto es posible únicamente por la condición del orden que mencionamos anteriormente, ya que en general la condición de optimalidad no se cumple para camino máximo, como vimos en la teórica.
 
@@ -97,29 +97,32 @@ Por lo tanto $C'$ es un camino con longitud mayor a $C$. Absurdo, pues $C$ era u
 
 En términos de la programación, elegimos utilizar la versión iterativa bottom up del algoritmo, donde básicamente la idea es recorrer un nodo y actualizar los vecinos, de forma similar al recorrido de un bfs: dado un nodo $i$, recorremos todos los posibles nodos a los que pueda tener un portal $j \in \{i + 1, .., n\}$, y si estamos conectados intentamos actualizar la distancia máxima hasta ese nodo. De cualquier forma, cabe destacar que sólo los nodos $i$ que sean alcanzables desde el comienzo deberían ser actualizados, ya que si no podríamos actualizar de forma errónea la distancia. El pseudocódigo está en el algoritmo \ref{alg:ex1}. %% TODO: ejemplo
 
-Veamos que nuestro algoritmo es correcto:
-
 \begin{definition}
 Decimos que un piso es alcanzable cuando existe un camino desde el piso inicial hasta él.
 \end{definition}
 
 \begin{lemma}
-Los pisos no alcanzables no alteran el camino máximo desde 0 al piso n.
+Los nodos no alcanzables no alteran el camino máximo desde 0 a n.
 \end{lemma}
 
 \begin{proof}
-Supongamos que un piso no alcanzable sí altera el camino máximo entre los pisos 0 y n. Entonces, el piso no alcanzable debe pertenecer al mismo. Absurdo, pues si pertenece al camino máximo entonces es alcanzable a través del sub-camino que lo une con el piso 0.
+Supongamos que un nodo no alcanzable sí altera el camino máximo entre los nodos 0 y n. Entonces, el nodo no alcanzable debe pertenecer al mismo. Absurdo, pues si pertenece al camino máximo entonces es alcanzable a través del sub-camino que lo une con 0.
 \end{proof}
 
 \begin{lemma}
-Tras la $i$-ésima iteración del ciclo externo, si el piso $i$ es alcanzable, $best[i]$ guarda la longitud del camino más largo desde el piso 0 hasta el piso $i$.
+Al comenzar la $i$-ésima iteración del ciclo externo, si el nodo $i$ es alcanzable, $best[i]$ tiene la longitud del camino más largo de $0$ a $i$.
 \end{lemma}
 
 \begin{proof}
-Sea $i$ el número de piso y n la cantidad de pisos, tal que 0 $\leq$ $i$ < $n$. Por inducción en $i$, cuando $i = 0$, veamos que inicializamos el vector $best$ con todos sus valores en 0, y para $i = 0$ no lo modificamos. Esto es porque el if no se cumple, dado que él mismo es alcanzable (porque es el piso inicial) y luego el siguiente ciclo sólo modifica a sus vecinos. 
+Sea n la cantidad de pisos e $i$ el número de piso, tal que $0 \leq i < n$. \\
+Por inducción en $i$. \\
 
+Cuando $i = 0$, al iniciar la primera iteración, $best[0] = 0$. Esto es lo esperable, dado que por definición: el camino que comienza en un nodo y termina en sí mismo tiene longitud 0. \\
 
+Luego, siendo $i > 0$, supongamos que el lema vale para todo $0 \leq k < i$, estando $k$ conectado con $i$. Esto significa que para todo nodo $k$, al comenzar la $k$-ésima iteración, el algoritmo llevaba guardado en $best[k]$ la longitud del camino máximo de $0$ a $k$ y luego del segundo ciclo los valores de todos los vecinos de $k$ fueron actualizados tomando el máximo entre el valor ya guardado y $best[k]+1$ (por utilizar la arista de $k$ a su vecino). Como dijimos que $i$ es vecino de $k$ y para cada $k$ estamos guardando en $best[i]$ el valor máximo entre el ya guardado y $best[k]+1$, en particular, al terminar de iterar por los $k$ nodos, obtuvimos el máximo entre todos los $best[k]+1$ en $best[i]$. Finalmente, podemos asegurar que ésta es la longitud máxima de $0$ a $i$ porque debe ser el máximo de todos los caminos que comienzan en 0 y llegan a él; y, por la condición de orden que mencionamos anteriormente en la demostración, todos estos caminos pasan únicamente por nodos inferiores a él y hemos recorrido todos.
 \end{proof}
+
+Finalmente, dado que el último nodo es alcanzable por definición del problema, por los lemas \textbf{1.0.2, 1.0.3}, sabemos que al retornar $best[floors-1]$ estamos devolviendo la longitud de un camino máximo del primer nodo al último.
 
 \begin{algorithm}[h!]
 \caption{Algoritmo de programación dinámica bottom up para el ejercicio 1. $n$ es la cantidad de pisos.\label{alg:ex1}}
@@ -168,13 +171,17 @@ En la práctica, los experimentos realizados nos permitieron comprobar que efect
 
 \section{Problema 2}
 
-\subsection{Breve descripción del algoritmo}
+\subsection{Resolución}
 
-El problema es modelable utilizando grafos. Tomando cada posición posible de cada piso como un nodo, y dos posiciones se conectan entre ellas con peso 1 si son posiciones contiguas dentro de un mismo piso, o con peso 2 es una conexión hecha a través de un portal. Con este modelado uno podría buscar el camino mínimo entre el nodo que representa a la primera posición del primer piso y el que representa la ultima posición del ultimo piso.\par
-%TODO: Grafico grafo con pesos
-El problema es que ningún algoritmo de camino mínimo en grafos con peso pertenece a la complejidad requerida por el problema, por lo tanto se tuvo que pensar una manera diferente de modelarlo. \par
-Prestando atención a la complejidad - $O(NL + P)$ - uno puede ver que, siendo $N$ la cantidad de pisos, y $L$ la cantidad de posiciones por piso, con el punto de vista anterior esto es igual a la cantidad de aristas que hay en cada piso, formada por las conexiones entre posiciones contiguas de cada piso; luego, siendo $P$ la cantidad de portales, esto es igual a la cantidad de aristas que no entran en el conjunto anterior, es decir las aristas que representan la conexión de posiciones a través de un portal. De esto podemos concluir que la complejidad es $O(|E|)$ siendo $E$ el conjunto de aristas del grafo, y un algoritmo sobre grafos que sirve para calcular camino mínimo, entre un nodo y todos los demás, que pertenece a esa complejidad es el de $Breadth$-$first$-$search$, específicamente el camino simple de longitud mínima (siendo la longitud la cantidad de aristas que lo forman).\par
-El problema con el grafo que creamos a partir del problema es que contiene aristas con pesos distintos ($1$ o $2$), pero se puede solucionar fácilmente de la siguiente forma: para todas las aristas $(x,y)$ de con peso asociado igual a $2$, las borramos y luego insertamos un nuevo nodo $z$ y agregamos las aristas $(x, z)$ y $(z, y)$.
+A priori, leer el enunciado del problema deja claro que la solución debe involucrar tomar el camino mínimo que conecte a la posición inicial con la posición final (el aula). El primer modelo al que llegamos involucraba tener 1 nodo por cada posición que tuviese un portal, y conectar cada uno de estos nodos con los otros que estén en el mismo piso (tomando como peso la cantidad de segundos que tardaríamos en recorrer el trayecto) y con los nodos a los que un portal pueda llevarlo (poniéndole peso 2 a cada arista, que simboliza una vez más la cantidad de tiempo). Con este modelo, queda claro que el problema del enunciado se traduce en calcular el camino mínimo que une a la posición inicial con el aula de algoritmos. Sin embargo, un análisis rápido de complejidad temporal muestra que este modelado no permite una solución que esté cumpla el enunciado utilizando los algoritmos que vimos en la clase, y por lo tanto rápidamente lo descartamos.
+
+Encontramos, entonces, otro modelo posible: crear un nodo por cada posición posible (de esta forma tendríamos $NL$ nodos) y conectar todos los que estén en el mismo piso con peso 1 en las aristas, simbolizando que tardamos 1 segundo en movernos de una posición a otra; además, si hay un portal que conecta una posición con otra, agregamos un "nodo fantasma" en el medio, y conectamos el nodo a los dos extremos del portal con peso 1. Esta idea del "nodo fantasma" es para solucionar el p
+
+De esta forma, tenemos exactamente $NL + P$ nodos (uno por posición y uno por portal) y un total de $N (L-1) + 2P$ aristas. Observemos que en este nuevo grafo, el hecho de tener pesos uniformes nos permite calcular el camino mínimo utilizando BFS como vimos en la teórica; dado que la complejidad temporal de BFS es $O(m + n)$, tenemos que en particular para este grafo se convierte en $O(NL + P + N (L-1) + 2P) = O(NL + P)$, y por lo tanto estaríamos cumpliendo con la complejidad pedida por el enunciado.
+
+Formalizando un poco la idea, si tenemos una instancia de parámetros $N$ y $L$, con portales $\{(x_i, y_i)\}_{1 \leq i \leq P}$, entonces el grafo que debemos generar es $G = (V, E)$ donde $V = \{(n, i) : n \in \{1, .., N\}, i \in \{1, .., L\}\} \cup \{P_k : k \in \{1, .., P\}\}$ y 
+
+% TODO: Grafico grafo con pesos
 
 %TODO: grafico grafo posta
 
@@ -255,9 +262,7 @@ Observemos que la transformación de los pesos de las aristas siempre toma exact
 
 Por otro lado, caracterizar el peor caso es más difícil: si bien es claro que el grafo debería ser denso (teniendo entonces que ya el pre-procesamiento tomaría $\Theta(n^2)$), lo ideal sería también forzar al algoritmo de Kruskal a tener que hacer pop para todas las aristas antes de poder terminar. Observemos que el algoritmo va a hacer pop hasta que haya logrado completar un árbol, por lo que la condición fundamental para que esto suceda es que las aristas que le permitan completar un árbol sean las últimas en ser procesadas. Cabe destacar entonces que el pre-procesamiento lo que hace es dar vuelta el orden de recorrido de las aristas, por lo que las aristas que fuesen las primeras al ordenarlas en el grafo original van a ser las últimas en el grafo procesado; implicando que las aristas que para completar el árbol deberían ser las de menor peso del grafo. Finalmente, para generar un grafo de $n$ nodos con estas características lo único que debemos hacer es tomar $K_n$, asignar los pesos de cualquier forma (pero siempre mayores o iguales a un número $M > 1$), y luego tomar algún nodo arbitrario del grafo, y hacer que todas sus aristas tengan peso $M - 1$. Nótese, sin embargo, que jamás será posible popear exactamente todas las aristas, ya que al llegar a la primera de las que conectan al nodo, simplemente tomaremos a esa (y no va a haber una asignación de pesos particular que logre que esto cambie). En este caso, tendríamos que $m \in O(n^2)$, por lo que la complejidad temporal pasaría a ser $O(n^2 log(n))$.
 
-Como puede verse en la figura \ref{grf:ex3}, tenemos que ambos casos parecerían efectivamente estar en la complejidad deseada. Al igual que en los otros ejercicios, tenemos una variación muy amplia en la medición de tiempos al principio, pero terminan convergiendo a una constante menor a 1, lo que demuestra que efectivamente la complejidad es como anunciamos anteriormente. Cabe destacar la particularidad que en estos gráficos las rectas parecerían no ser del todo constantes, sino que tendrían una ligera inclinación positiva.
-
-%%%%%%% TODO: chamuyoooo
+Como puede verse en la figura \ref{grf:ex3}, tenemos que ambos casos parecerían efectivamente estar en la complejidad deseada. Al igual que en los otros ejercicios, tenemos una variación muy amplia en la medición de tiempos al principio, pero terminan convergiendo a una constante, lo que demuestra que efectivamente la complejidad es como anunciamos anteriormente.
 
 \begin{figure}[h!]
 \centering

@@ -41,7 +41,7 @@ void ShortestPath::addPortal(int fromFloor, int fromD, int toFloor, int toD) {
 	connect(from, portalIndex);
 	connect(portalIndex, to);
 
-	// Incremento el indice para apuntar al siguiente vertices intermediario
+	// Incremento el indice para apuntar al siguiente vertice intermediario
 	portalIndex++;
 }
 

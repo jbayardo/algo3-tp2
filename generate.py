@@ -54,10 +54,10 @@ def best_case_2(top):
     cases = defaultdict(list)
     for l in xrange(2, max(top + 1, 3)):
         for floor in xrange(l):
-            for here in xrange(l):
-                for there in xrange(l - 1 * (l == (floor + 1))):
+            for here in xrange(l+1):
+                for there in xrange(l + 1 - 1 * (l == (floor + 1))):
                     edge = ""
-                    if floor == 0 and here == 0 and there == l - 1:
+                    if floor == 0 and here == 0 and there == l:
                         edge = "%d %d %d %d" % (floor, here, l, l)
                     else:
                         edge = "%d %d %d %d" % (floor, here, floor + 1, there)

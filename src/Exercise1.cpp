@@ -6,6 +6,8 @@
 
 Maximize::Maximize(int iFloors)
         : floors(iFloors+1) {
+    Timer timer("Excercise 1 Generate Matrix Timer");
+
     for (auto i = 0; i < floors; ++i) {
         adjacency.push_back(std::vector<bool>(floors-i, false));
     }

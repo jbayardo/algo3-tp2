@@ -51,8 +51,20 @@ def worst_case_1(top_floor):
 ####################################
 
 def best_case_2(top):
-    return "\n".join(["%d %d\n0 0 %d %d" % (l, l, l, l)
-                      for l in xrange(2, max(top + 1, 3))])
+    cases = defaultdict(list)
+    for l in xrange(2, max(top + 1, 3)):
+        for floor in xrange(l):
+            for here in xrange(l):
+                for there in xrange(l - 1 * (l == (floor + 1))):
+                    edge = ""
+                    if floor == 0 and here == 0 and there == 0:
+                        edge = "%d %d %d %d" % (floor, here, l, there)
+                    else:
+                        edge = "%d %d %d %d" % (floor, here, floor + 1, there)
+                    cases[(l, l)].append(edge)
+
+    return "\n".join(["%d %d\n" % k + "; ".join(cases[k])
+                      for k in sorted(cases.keys())])
 
 
 def random_case_2(top):
@@ -68,7 +80,7 @@ def random_case_2(top):
         # agrego aristas random
         all_edges = list(combinations(xrange(l), 2))
         shuffle(all_edges)
-        for (x, y) in all_edges[:randint(((l-1)*(l-2))/2, ((l-1)*(l))/2)]:
+        for (x, y) in all_edges[:randint(((l - 1) * (l - 2)) / 2, ((l - 1) * (l)) / 2)]:
             here = randint(0, l)
             there = randint(0, l)
             edge = "%d %d %d %d" % (x, here, y, there)
@@ -97,9 +109,10 @@ def worst_case_2(top):
 
 def best_case_3(top):
     cases = []
-    for n in xrange(2, max(3, top + 1)):
-        edges = "; ".join(["%d %d %d" % (i, i + 1, randint(1, 100))
-                          for i in xrange(n + 1)])
+    top = max(4, top + 1)
+    for n in xrange(3, top + 1):
+        edges = "; ".join(["%d %d %d" % (x, y, 1)
+                           for (x, y) in combinations(xrange(n + 1), 2)])
         cases.append(edges)
     return "\n".join(cases)
 
@@ -107,7 +120,7 @@ def best_case_3(top):
 def random_case_3(top, max_weight=100):
     cases = []
     for x in xrange(3, top + 1):
-        m = randint(2 + ((x - 1)*(x - 2))/2, (x*(x-1))/2)
+        m = randint(2 + ((x - 1) * (x - 2)) / 2, (x * (x - 1)) / 2)
         all_edges = list(combinations(xrange(x + 1), 2))
         shuffle(all_edges)
         edges = "; ".join(["%d %d %d" % (a, b, randint(3, max_weight))
@@ -116,12 +129,11 @@ def random_case_3(top, max_weight=100):
     return "\n".join(cases)
 
 
-
-def worst_case_3(top, max_weight=100):
+def worst_case_3(top):
     cases = []
     top = max(4, top + 1)
     for n in xrange(3, top + 1):
-        edges = "; ".join(["%d %d %d" % (x, y, (x == 0) * 1 + x * randint(3, max_weight))
+        edges = "; ".join(["%d %d %d" % (x, y, (x == 0) * 1 + 3 * (x != 0))
                            for (x, y) in combinations(xrange(n + 1), 2)])
         cases.append(edges)
     return "\n".join(cases)

@@ -71,7 +71,7 @@ void Exercise3::read(std::string input) {
                 maxFloor = std::max(std::max(maxFloor, from), to);
             }
 
-			WeightedGraph graph(maxFloor + 1);
+            std::list<Edge> edges;
 
             // Armamos las conexiones del grafo
 			for (auto &portal : parser) {
@@ -81,8 +81,9 @@ void Exercise3::read(std::string input) {
 
                 // Agregamos los pesos del grafo, pero negados, este truco nos va a permitir hacer que Kruskal nos de
                 // el árbol generador máximo
-                graph.connect(from, to, -weight);
+                edges.push_back(Edge(from, to, -weight));
             }
+            WeightedGraph graph(maxFloor + 1, edges);
 
             // Agregar instancia
             this->instances.push_back(graph);

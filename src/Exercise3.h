@@ -67,8 +67,8 @@ struct Edge {
 class WeightedGraph {
 public:
     WeightedGraph(std::size_t iVertices) : sum(0), edges(0), vertices(iVertices) { }
-    WeightedGraph(std::size_t iVertices, std::list<Edge> iEdges) : sum(0), edges(iEdges.size()),
-                                                                   vertices(iVertices) {
+    WeightedGraph(std::size_t iVertices, const std::list<Edge>& iEdges) : sum(0), edges(iEdges.size()),
+                                                                          vertices(iVertices) {
         Timer timer("Excercise 3 Generate Graph Timer");
         for (auto &e: iEdges) {
             adjacency.push_back(Edge(e));

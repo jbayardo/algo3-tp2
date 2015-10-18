@@ -58,7 +58,7 @@ def best_case_2(top):
                 for there in xrange(l - 1 * (l == (floor + 1))):
                     edge = ""
                     if floor == 0 and here == 0 and there == l - 1:
-                        edge = "%d %d %d %d" % (floor, here, l - 1, l - 1)
+                        edge = "%d %d %d %d" % (floor, here, l, l)
                     else:
                         edge = "%d %d %d %d" % (floor, here, floor + 1, there)
                     cases[(l, l)].append(edge)

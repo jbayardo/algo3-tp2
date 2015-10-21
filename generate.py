@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import os
 from collections import defaultdict
-from random import randint, shuffle, random
+from random import randint, shuffle, random, randrange
 from itertools import combinations
 
 EX_DIR = "experiments/"
@@ -111,8 +111,8 @@ def best_case_3(top):
     cases = []
     top = max(4, top + 1)
     for n in xrange(3, top + 1):
-        edges = "; ".join(["%d %d %d" % (x, y, 1)
-                           for (x, y) in combinations(xrange(n + 1), 2)])
+        m = (n * (n - 1)) / 2
+        edges = "; ".join(["%d %d %d" % (x, x+1, 1) for x in xrange(m)])
         cases.append(edges)
     return "\n".join(cases)
 
@@ -120,12 +120,28 @@ def best_case_3(top):
 def random_case_3(top, max_weight=100):
     cases = []
     for x in xrange(3, top + 1):
-        m = randint(2 + ((x - 1) * (x - 2)) / 2, (x * (x - 1)) / 2)
-        all_edges = list(combinations(xrange(x + 1), 2))
-        shuffle(all_edges)
-        edges = "; ".join(["%d %d %d" % (a, b, randint(3, max_weight))
-                           for (a, b) in all_edges[:m]])
-        cases.append(edges)
+        m = (x * (x - 1)) / 2
+        n = randint(x + 1, x * 3)
+        mmax=n*(n-1)/2
+        edges = []
+
+        a = 0
+        b = 1
+        count = 0
+        delta = 0
+
+        while True:
+            if randrange(mmax - delta) < m - count:
+                edges.append("%d %d %d" % (a, b, randint(3, max_weight)))
+                count += 1
+                if count == m:
+                    cases.append("; ".join(edges))
+                    break
+            delta += 1
+            b += 1
+            if b == n:
+                a += 1
+                b = a + 1
     return "\n".join(cases)
 
 
@@ -186,6 +202,6 @@ if __name__ == '__main__':
     #     print "Numero Problema a generar"
     if not os.path.exists(EX_DIR):
         os.makedirs(EX_DIR)
-    generate_ex(1, 100)
-    generate_ex(2, 100)
+    # generate_ex(1, 100)
+    # generate_ex(2, 100)
     generate_ex(3, 100)

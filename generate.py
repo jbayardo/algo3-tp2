@@ -125,7 +125,7 @@ def random_case_3(top, max_weight=100):
         all_edges = list(combinations(xrange(n + 1), 2)) #genero Kn+1
         shuffle(all_edges) #randomizo aristas
         edges = "; ".join(["%d %d %d" % (x, y, randint(1, max_weight))
-                           for (x, y) in all_edges[:m + 1]) 
+                           for (x, y) in all_edges[:m + 1]]) 
                            # Elijo m+1 aristas para asegurar que sea conexo
         cases.append(edges)
     return "\n".join(cases)

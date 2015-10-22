@@ -104,7 +104,6 @@ void Exercise3::solve(int runs, std::string output) {
 
     for (auto &instance : instances) {
         for (auto i = 0; i < runs - 1; ++i) {
-			std::cout << "Now running: " << j << " / " << i << "\r";
             instance.kruskal();
         }
 

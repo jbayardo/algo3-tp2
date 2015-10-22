@@ -137,7 +137,7 @@ def worst_case_3(top):
     top = max(4, top + 1)
     for n in xrange(3, top + 1):
         edges = "; ".join(["%d %d %d" % (x, y, (x == 0) * 1 + 3 * (x != 0))
-                           for (x, y) in combinations(xrange(n + 1), 2)])
+                           for (x, y) in combinations(xrange(n), 2)])
         cases.append(edges)
     return "\n".join(cases)
 

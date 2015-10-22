@@ -119,30 +119,17 @@ def best_case_3(top):
 
 def random_case_3(top, max_weight=100):
     cases = []
-    for x in xrange(3, top + 1):
-        m = (x * (x - 1)) / 2
-        n = randint(x + 1, x * 3)
-        mmax=n*(n-1)/2
-        edges = []
-
-        a = 0
-        b = 1
-        count = 0
-        delta = 0
-
-        while True:
-            if randrange(mmax - delta) < m - count:
-                edges.append("%d %d %d" % (a, b, randint(3, max_weight)))
-                count += 1
-                if count == m:
-                    cases.append("; ".join(edges))
-                    break
-            delta += 1
-            b += 1
-            if b == n:
-                a += 1
-                b = a + 1
+    top = max(4, top + 1)
+    for n in xrange(3, top + 1):
+        m = (n * (n - 1)) / 2
+        all_edges = list(combinations(xrange(n + 1), 2)) #genero Kn+1
+        shuffle(all_edges) #randomizo aristas
+        edges = "; ".join(["%d %d %d" % (x, y, randint(1, max_weight))
+                           for (x, y) in all_edges[:m + 1]) 
+                           # Elijo m+1 aristas para asegurar que sea conexo
+        cases.append(edges)
     return "\n".join(cases)
+
 
 
 def worst_case_3(top):

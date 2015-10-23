@@ -70,20 +70,20 @@ def best_case_2(top):
 def random_case_2(top):
     cases = defaultdict(set)
     for l in xrange(2, max(top + 1, 3)):
-        # me aseguro que sea conexo y haya solucion
         for floor in xrange(l):
             here = randint(0, l)
             there = randint(0, l)
             next = floor + 1
             edge = "%d %d %d %d" % (floor, here, next, there)
             cases[(l, l)].add(edge)
-        # agrego aristas random
-        all_edges = list(combinations(xrange(l), 2))
-        shuffle(all_edges)
-        for (x, y) in all_edges[:randint(((l - 1) * (l - 2)) / 2, ((l - 1) * (l)) / 2)]:
+        for _ in xrange(l**3):
             here = randint(0, l)
             there = randint(0, l)
-            edge = "%d %d %d %d" % (x, here, y, there)
+            origin = randint(0, l)
+            dest = randint(0, l)
+
+            edge = "%d %d %d %d" % (origin, here, dest, there)
+
             cases[(l, l)].add(edge)
 
     return "\n".join(["%d %d\n" % k + "; ".join(cases[k])
@@ -107,13 +107,39 @@ def worst_case_2(top):
 ####################################
 
 
+def _tree_edges(n):
+    # generador de arbol binario balanceado
+    nodes = iter(range(n))
+    parents = [next(nodes)]
+    while parents:
+        source = parents.pop(0)
+        for i in range(2):
+            try:
+                target = next(nodes)
+                parents.append(target)
+                yield source, target
+            except StopIteration:
+                break
+
+
 def best_case_3(top):
     cases = []
     top = max(4, top + 1)
     for n in xrange(3, top + 1):
         m = (n * (n - 1)) / 2
-        edges = "; ".join(["%d %d %d" % (x, x+1, 1) for x in xrange(m)])
-        cases.append(edges)
+        all_edges = list(combinations(xrange(n), 2))  # genero Kn
+        shuffle(all_edges)  # randomizo aristas
+        s_edges = set([(min(e), max(e)) for e in _tree_edges(n)])
+        edges = {e: 2 for e in _tree_edges(n)}
+
+        while len(edges) < m:
+            e = all_edges.pop()
+            k = (min(e), max(e))
+            if k not in s_edges:
+                edges[e] = 1
+                s_edges.add(k)
+        assert len(edges) == m
+        cases.append("; ".join(["%d %d "%e + "%d"% edges[e]for e in edges]))
     return "\n".join(cases)
 
 
@@ -124,10 +150,11 @@ def random_case_3(top, max_weight=100):
         m = (n * (n - 1)) / 2
         all_edges = list(combinations(xrange(n + 1), 2)) #genero Kn+1
         shuffle(all_edges) #randomizo aristas
-        edges = "; ".join(["%d %d %d" % (x, y, randint(1, max_weight))
-                           for (x, y) in all_edges[:m + 1]]) 
+        edges = ["%d %d %d" % (x, y, randint(1, max_weight))
+                 for (x, y) in all_edges[:m + 1]]
+        assert len(edges) - 1 == m
                            # Elijo m+1 aristas para asegurar que sea conexo
-        cases.append(edges)
+        cases.append("; ".join(edges))
     return "\n".join(cases)
 
 
@@ -136,9 +163,11 @@ def worst_case_3(top):
     cases = []
     top = max(4, top + 1)
     for n in xrange(3, top + 1):
-        edges = "; ".join(["%d %d %d" % (x, y, (x == 0) * 1 + 3 * (x != 0))
-                           for (x, y) in combinations(xrange(n), 2)])
-        cases.append(edges)
+        m = (n * (n - 1)) / 2
+        edges = ["%d %d %d" % (x, y, (x == 0) * 1 + 3 * (x != 0))
+                 for (x, y) in combinations(xrange(n), 2)]
+        assert len(edges) == m
+        cases.append("; ".join(edges))
     return "\n".join(cases)
 
 

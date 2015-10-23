@@ -459,7 +459,8 @@ Observemos, entonces, que transformar pesos y correr Kruskal es una manera corre
         \subfloat{\includegraphics[width=4cm]{images/ej3/bestcase/04.png}} &
         \subfloat{\includegraphics[width=4cm]{images/ej3/bestcase/05.png}} \\
         \subfloat{\includegraphics[width=4cm]{images/ej3/bestcase/06.png}} &
-        \subfloat{\includegraphics[width=4cm]{images/ej3/bestcase/07.png}}
+        \subfloat{\includegraphics[width=4cm]{images/ej3/bestcase/07.png}} &
+        \subfloat{\includegraphics[width=4cm]{images/ej3/bestcase/08.png}}
     \end{tabular}
     
     \caption{Ejemplo de una corrida de mejor caso para el ejercicio 3. El arreglo de arriba representa el el vector interno de la cola de prioridad. \label{grf:ex3-best}}
@@ -484,7 +485,7 @@ Por otro lado, caracterizar el peor caso es más difícil: si bien es claro que 
         \subfloat{\includegraphics[width=4cm]{images/ej3/worstcase/06.png}}
     \end{tabular}
     
-    \caption{Ejemplo de una corrida de peor caso para el ejercicio 3. El arreglo de arriba representa el el vector interno de la cola de prioridad. \label{grf:ex3-worst}}
+    \caption{Ejemplo de una corrida de peor caso para el ejercicio 3. El arreglo de arriba representa el vector interno de la cola de prioridad. \label{grf:ex3-worst}}
 \end{figure}
 
 Como puede verse en la figura \ref{grf:ex3}, tenemos que ambos casos parecerían efectivamente estar en la complejidad deseada. Al igual que en los otros ejercicios, tenemos una variación muy amplia en la medición de tiempos al principio, pero terminan convergiendo a una constante, lo que demuestra que efectivamente la complejidad es como anunciamos anteriormente.
@@ -492,7 +493,7 @@ Como puede verse en la figura \ref{grf:ex3}, tenemos que ambos casos parecerían
 Para generar el mejor caso para este ejercicio, y que el $m$ sea el mismo para cada prueba que el $m$ en el peor caso, lo que hacemos es calcular a cada paso el $m$ correspondiente al peor caso, es decir, a un $K_n$ para un determinado $n$. Luego, generamos un árbol binario balanceado de $n$ nodos, donde cada arista tiene peso 2. Una vez hecho esto, se le agregan al árbol aristas aleatorias con peso 1 hasta que queda un grafo completo. De esta manera, cuando kruskal ordene las aristas, y saque las primeras $n-1$, ya va a tener el árbol armado y puede terminar, por lo que no hace falta que saque las $(n-1)*(n-2)/2$ aristas restantes.
 
 Para generar los casos aleatorios para este ejercicio, como M en el peor caso es igual a $\frac{N*(N-1)}{2}$ ya que el peor caso es un $K_n$, lo que decidimos hacer es para cada N, generar
-$K_n+1$, y elegir aleatoriamente $M+1$ aristas, siendo $M = \frac{N*(N-1)}{2}$. De esta manera, nos aseguramos que el grafo generado sea conexo, ya que si un grafo tiene $ M > \frac{(N-1)*(N-2)}{2}$ aristas, el mismo es conexo. Esto se debe a que $\frac{(N-1)*(N-2)}{2}$ es la cantidad de aristas de $K_n-1$, por lo que si agregamos un nodo más, y una arista más, por teorema del palomar, esa arista debe conectar a $K_n-1$ con el nuevo nodo, ya que $K_n-1$ es completo. La elección aleatoria de aristas da por resultado un grafo aleatorio, con la misma cantidad de aristas que el peor caso, ya que $O(M+1) = O(M)$.
+$K_n+1$, y elegir aleatoriamente $M+1$ aristas, siendo $M = \frac{N*(N-1)}{2}$. De esta manera, nos aseguramos que el grafo generado sea conexo, ya que si un grafo G cualquiera tiene $ M > \frac{(N-1)*(N-2)}{2}$ aristas, el mismo es conexo. Esto se debe a que $\frac{(N-1)*(N-2)}{2}$ es la cantidad de aristas de $K_n-1$, para un $n$ dado, por lo que si agregamos un nodo más, y una arista más, por teorema del palomar, esa arista debe conectar a $K_n-1$ con el nuevo nodo, ya que $K_n-1$ es completo. La elección aleatoria de aristas da por resultado un grafo aleatorio, con la misma cantidad de aristas que el peor caso, ya que $O(M+1) = O(M)$.
 
 
 
@@ -513,14 +514,17 @@ $K_n+1$, y elegir aleatoriamente $M+1$ aristas, siendo $M = \frac{N*(N-1)}{2}$. 
 \subsection{Main}
 \lstinputlisting[language=C++]{../src/main.cpp}
 
+\newpage
 \subsection{Ejercicio 1}
 \lstinputlisting[language=C++]{../src/Exercise1.h}
 \lstinputlisting[language=C++]{../src/Exercise1.cpp}
 
+\pagebreak
 \subsection{Ejercicio 2}
 \lstinputlisting[language=C++]{../src/Exercise2.h}
 \lstinputlisting[language=C++]{../src/Exercise2.cpp}
 
+\pagebreak
 \subsection{Ejercicio 3}
 \lstinputlisting[language=C++]{../src/Exercise3.h}
 \lstinputlisting[language=C++]{../src/Exercise3.cpp}

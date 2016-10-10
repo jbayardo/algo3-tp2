@@ -7,46 +7,61 @@
 
 class DisjointSet {
 public:
-    DisjointSet(std::size_t size)
-            : rank(size, 1), parent(size, 0) {
-        for (std::size_t i = 0; i < size; ++i) {
-            parent[i] = i;
-        }
-    }
+	DisjointSet(std::size_t size)
+		: rank(size, 1), parent(size, 0)
+	{
+		for (std::size_t i = 0; i < size; ++i)
+		{
+			parent[i] = i;
+		}
+	}
 
-    void merge(int a, int b) {
-        // ASSERT: a != b
-        int setA = find(a);
-        int setB = find(b);
+	void merge(int a, int b)
+	{
+		a = find(a);
+		b = find(b);
 
-        if (rank[a] < rank[b]) {
-            parent[a] = setB;
-        } else if (rank[a] > rank[b]) {
-            parent[b] = setA;
-        } else {
-            parent[a] = setB;
-            rank[b] += 1;
-        }
-    }
+		// Do not merge sets with the same representatives
+		if (a == b) return;
 
-    int find(int element) {
-        int current = element;
+		if (rank[a] < rank[b])
+		{
+			parent[a] = b;
+		}
+		else if (rank[a] > rank[b])
+		{
+			parent[b] = a;
+		}
+		else
+		{
+			parent[a] = b;
+			rank[b] += 1;
+		}
+	}
 
-        while (parent[current] != current) {
-            current = parent[current];
-        }
+	int find(int element)
+	{
+		int current = element;
 
-        while (parent[element] != current) {
-            int next = parent[element];
-            parent[element] = current;
-            element = next;
-        }
+		while (parent[current] != current)
+		{
+			current = parent[current];
+		}
 
-        return current;
-    }
+		while (parent[element] != current)
+		{
+			int next = parent[element];
+			parent[element] = current;
+			element = next;
+		}
+
+		return current;
+	}
 private:
-    std::vector<int> rank;
-    std::vector<int> parent;
+	// rank[i] always keep the height of the tree rooted at i
+	std::vector<int> rank;
+	// parent[i] points to the parent of i. parent[i] = i \iff i is the root
+	std::vector<int> parent;
 };
 
 struct Edge {
